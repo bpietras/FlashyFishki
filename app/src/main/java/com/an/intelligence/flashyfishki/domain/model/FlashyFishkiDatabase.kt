@@ -16,6 +16,5 @@ import androidx.room.TypeConverters
 )
 @TypeConverters(Converters::class)
 abstract class FlashyFishkiDatabase : RoomDatabase() {
-    // DAOs will be added here later
-
+    // DAOs będą dodane później
 }

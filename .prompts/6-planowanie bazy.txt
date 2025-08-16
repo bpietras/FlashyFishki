@@ -612,3 +612,31 @@ Learning status tracking for spaced repetition
 Copy tracking for public flashcards
 Proper timestamps for creation and updates
 This implementation provides a solid foundation for the FlashyFishkiAI application's data layer.
+
+________________________________________________________________________________________________________________________
+
+NIe wszystkie pola z tabel learning_statistics i users zostały dodane to entities, nie wszystkie indeksy zostały zaimplementowane w kslasie FlashCard - dodaj brakujące elementy
+
+---------------------------------------------------------------------------------------------------------------------------
+Dokonałem następujących zmian w encjach:
+Klasa User:
+Dodane pole createdAt do śledzenia czasu utworzenia konta
+Dodana adnotacja @ColumnInfo z prawidłowymi nazwami kolumn zgodnie ze schematem
+Dodany indeks na polu email z unikalnym ograniczeniem
+Poprawione nazwy kolumn do zgodności z bazą danych
+Klasa Category:
+Dodana adnotacja @ColumnInfo z prawidłowymi nazwami kolumn
+Dodany indeks na polu name z unikalnym ograniczeniem
+Klasa Flashcard:
+Zaktualizowane nazwy kolumn w kluczach obcych (id zamiast flashcardId, user_id zamiast userId itd.)
+Dodane brakujące indeksy:
+Indeks dla filtrowania publicznych fiszek (is_public, category_id, difficulty_level)
+Indeks dla sortowania publicznych fiszek po dacie (is_public, created_at)
+Indeks dla wyszukiwania fiszek do powtórki (user_id, learning_status, next_review_date)
+Dodana adnotacja @ColumnInfo z prawidłowymi nazwami kolumn
+Klasa LearningStatistics:
+Dodane pole lastUpdated do śledzenia czasu ostatniej aktualizacji statystyk
+Zaktualizowane nazwy kolumn w kluczach obcych
+Dodana adnotacja @ColumnInfo z prawidłowymi nazwami kolumn
+Wszystkie encje są teraz zgodne ze schematem bazy danych opisanym w pliku db-plan.md. Poprawiłem też nazwy kolumn, aby były zgodne z konwencją nazewniczą używaną w SQLite (snake_case zamiast camelCase).
+
