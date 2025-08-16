@@ -1,0 +1,614 @@
+CLAUDE SONNET 3.7
+
+Jesteś asystentem AI, którego zadaniem jest pomoc w zaplanowaniu schematu bazy danych w SQLite dla MVP (Minimum Viable Product) na podstawie dostarczonych informacji. Twoim celem jest wygenerowanie listy pytań i zaleceń, które zostaną wykorzystane w kolejnym promptowaniu do utworzenia schematu bazy danych, relacji i zasad bezpieczeństwa na poziomie wierszy (RLS).
+
+Prosimy o uważne zapoznanie się z poniższymi informacjami:
+
+<product_requirements>
+@ai/prd.md
+</product_requirements>
+
+<tech_stack>
+@ai/tech-stack.md
+</tech_stack>
+
+Przeanalizuj dostarczone informacje, koncentrując się na aspektach istotnych dla projektowania bazy danych. Rozważ następujące kwestie:
+
+1. Zidentyfikuj kluczowe encje i ich atrybuty na podstawie wymagań produktu.
+2. Określ potencjalne relacje między jednostkami.
+3. Rozważ typów danych i ograniczeń, które mogą być konieczne.
+4. Pomyśl o skalowalności i wpływie na wydajność.
+5. Oceń wymagania bezpieczeństwa i ich wpływ na projekt bazy danych.
+6. Rozważ wszelkie konkretne funkcje SQLite, które mogą być korzystne dla projektu.
+
+Na podstawie analizy wygeneruj listę pytań i zaleceń. Powinny one dotyczyć wszelkich niejasności, potencjalnych problemów lub obszarów, w których potrzeba więcej informacji, aby stworzyć skuteczny schemat bazy danych. Rozważ pytania dotyczące:
+
+1. Relacje i kardynalność jednostek
+2. Typy danych i ograniczenia
+3. Strategie indeksowania
+4. Partycjonowanie (jeśli dotyczy)
+5. Wymagania bezpieczeństwa na poziomie wierszy
+6. Rozważania dotyczące wydajności
+7. Kwestie skalowalności
+8. Integralność i spójność danych
+
+Dane wyjściowe powinny mieć następującą strukturę:
+
+<database_planning_output>
+<pytania>
+[Wymień tutaj swoje pytania, ponumerowane]
+</pytania>
+
+<rekomendacje>
+[Wymień tutaj swoje zalecenia, ponumerowane]
+</rekomendacje>
+</database_planning_output>
+
+Pamiętaj, że Twoim celem jest dostarczenie kompleksowej listy pytań i zaleceń, które pomogą w stworzeniu solidnego schematu bazy danych SQLite dla MVP. Skoncentruj się na jasności, trafności i dokładności swoich wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.
+
+Kontynuuj ten proces, generując nowe pytania i rekomendacje w oparciu o przekazany kontekst i odpowiedzi użytkownika, dopóki użytkownik wyraźnie nie poprosi o podsumowanie.
+
+Pamiętaj, aby skupić się na jasności, trafności i dokładności wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+Read file: .ai/prd.md
+Read file: .ai/tech-stack.md
+Na podstawie analizy dostarczonych dokumentów, przygotowałem listę pytań i rekomendacji dotyczących schematu bazy danych SQLite dla aplikacji FlashLearn:
+
+<database_planning_output>
+<pytania>
+1. Czy planujecie synchronizację danych między urządzeniami w przyszłości, co mogłoby wpłynąć na projekt identyfikatorów w bazie danych (np. UUID zamiast lokalnych ID)?
+2. Jak dokładnie ma działać mechanizm udostępniania fiszek? Czy fiszki publiczne powinny być przechowywane w oddzielnej tabeli?
+3. Czy istnieje potrzeba wersjonowania fiszek (np. gdy autor edytuje udostępnioną fiszkę)?
+4. Czy dziedziny (kategorie) fiszek mają być globalne dla wszystkich użytkowników, czy każdy użytkownik tworzy własne dziedziny?
+5. Jak szczegółowe powinny być statystyki uczenia się? Czy chcemy śledzić każdą sesję nauki osobno, czy tylko ogólne statystyki per fiszka?
+6. Czy planujemy implementację tagów dla fiszek, poza kategoriami (dziedzinami)?
+7. Czy potrzebujemy przechowywać historię zmian statusów fiszek dla celów analitycznych?
+8. Jak chcemy obsługiwać przypadki, gdy użytkownik usunie dziedzinę, do której przypisane są fiszki?
+9. Czy w przyszłości planowane jest wprowadzenie mechanizmu oceniania/recenzowania fiszek publicznych?
+10. Jak powinniśmy projektować schemat bazy danych pod kątem przyszłego wsparcia dla zawartości multimedialnej w fiszkach?
+</pytania>
+
+<rekomendacje>
+1. Zaprojektować schemat bazy danych z następującymi głównymi tabelami: User, Flashcard, Category (Dziedzina), LearningStatus, FlashcardShare i LearningSession.
+2. Zastosować klucze obce (FOREIGN KEY) dla zapewnienia integralności referencyjnej między tabelami.
+3. Wprowadzić indeksowanie dla najczęściej wyszukiwanych kolumn, jak kategorie fiszek, poziom trudności oraz status nauki.
+4. Zaimplementować CASCADE DELETE dla tabel zależnych od User, aby usunięcie konta użytkownika skutkowało usunięciem wszystkich jego danych.
+5. Zastosować kolumnę timestamp dla śledzenia utworzenia i modyfikacji fiszek, co ułatwi sortowanie fiszek w bibliotece publicznej.
+6. Wprowadzić ograniczenie (CONSTRAINT) dla limitu 1000 fiszek na użytkownika poprzez walidację na poziomie aplikacji.
+7. Zastosować transakcje SQLite dla operacji modyfikujących wiele tabel jednocześnie (np. kopiowanie fiszek z biblioteki publicznej).
+8. Utworzyć osobną tabelę dla statystyk nauki, aby umożliwić generowanie raportów bez wpływu na wydajność głównych operacji aplikacji.
+9. Dodać indeks dla filtrowania fiszek według daty utworzenia, dziedziny i poziomu trudności.
+10. Zastosować pola typu TEXT dla pytań i odpowiedzi z ograniczeniami CHECK dla maksymalnej długości (500 i 1000 znaków).
+11. Zaprojektować tabelę łączącą dla relacji wiele-do-wielu między użytkownikami a udostępnionymi fiszkami.
+12. Wykorzystać Room ORM do obsługi migracji schematu bazy danych w przyszłych wersjach aplikacji.
+13. Wprowadzić kolumnę wersji dla fiszek, aby ułatwić śledzenie zmian w udostępnionych fiszkach.
+14. Zastosować indeksy dla kolumn używanych w zapytaniach JOIN, aby poprawić wydajność złożonych zapytań.
+15. Zaprojektować schemat bazy danych z myślą o przyszłej skalowalności, uwzględniając potencjalne nowe funkcje jak tagi czy zawartość multimedialna.
+</rekomendacje>
+</database_planning_output>
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+1. Nie
+2. Publiczne fiszki powinny znajdować się w tej samej tabeli co reszta tylko powinny być oznaczone jako publiczne
+3. Nie
+4. Globalne
+5. Ogólne statystyki per fiszka
+6. Nie
+7. Nie
+8. Nie można usunąć dziedziny jeśli istnieją przypisane do niej fiszki
+9. Nie
+10. Nie, głównym formatem fiszek pozostaje tekst
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Wystarczy pole wskazujące na oryginalną fiszkę
+2. Tak
+3. Nie
+4. Skala liczbowa 1-5
+5. Nie
+6. Generować na żądanie
+7. Nie
+8. Nie
+9. Nie
+10. Nie
+
+---
+
+Jesteś asystentem AI, którego zadaniem jest podsumowanie rozmowy na temat planowania bazy danych dla MVP i przygotowanie zwięzłego podsumowania dla następnego etapu rozwoju. W historii konwersacji znajdziesz następujące informacje:
+1. Dokument wymagań produktu (PRD)
+2. Informacje o stacku technologicznym
+3. Historia rozmów zawierająca pytania i odpowiedzi
+4. Zalecenia dotyczące modelu
+
+Twoim zadaniem jest:
+1. Podsumować historii konwersacji, koncentrując się na wszystkich decyzjach związanych z planowaniem bazy danych.
+2. Dopasowanie zaleceń modelu do odpowiedzi udzielonych w historii konwersacji. Zidentyfikuj, które zalecenia są istotne w oparciu o dyskusję.
+3. Przygotuj szczegółowe podsumowanie rozmowy, które obejmuje:
+   a. Główne wymagania dotyczące schematu bazy danych
+   b. Kluczowe encje i ich relacje
+   c. Ważne kwestie dotyczące bezpieczeństwa i skalowalności
+   d. Wszelkie nierozwiązane kwestie lub obszary wymagające dalszego wyjaśnienia
+4. Sformatuj wyniki w następujący sposób:
+
+<conversation_summary>
+<decisions>
+[Wymień decyzje podjęte przez użytkownika, ponumerowane].
+</decisions>
+
+<matched_recommendations>
+[Lista najistotniejszych zaleceń dopasowanych do rozmowy, ponumerowanych]
+</matched_recommendations>
+
+<database_planning_summary> [Podsumowanie planowania bazy danych]
+[Podaj szczegółowe podsumowanie rozmowy, w tym elementy wymienione w kroku 3].
+</database_planning_summary>
+
+<unresolved_issues>
+[Wymień wszelkie nierozwiązane kwestie lub obszary wymagające dalszych wyjaśnień, jeśli takie istnieją]
+</unresolved_issues>
+</conversation_summary>
+
+Końcowy wynik powinien zawierać tylko treść w formacie markdown. Upewnij się, że Twoje podsumowanie jest jasne, zwięzłe i zapewnia cenne informacje dla następnego etapu planowania bazy danych.
+
+_____________________________________________________________________________________________________________________________
+
+<conversation_summary>
+<decisions>
+1. Brak synchronizacji danych między urządzeniami
+2. Publiczne fiszki będą przechowywane w tej samej tabeli co prywatne, oznaczone flagą
+3. Brak systemu wersjonowania fiszek
+4. Kategorie (dziedziny) będą globalne dla wszystkich użytkowników
+5. Przechowywanie tylko ogólnych statystyk per fiszka
+6. Brak systemu tagów dla fiszek poza kategoriami
+7. Brak śledzenia historii zmian statusów fiszek
+8. Niemożność usunięcia kategorii, jeśli istnieją przypisane do niej fiszki
+9. Brak systemu oceniania/recenzowania fiszek publicznych
+10. Fiszki pozostają wyłącznie w formacie tekstowym
+11. Dla skopiowanych fiszek wystarczy pole wskazujące na oryginalną fiszkę
+12. Potrzeba śledzenia liczby kopii danej fiszki
+13. Brak dodatkowych metadanych dla kategorii poza nazwą
+14. Poziom trudności fiszki reprezentowany jako skala liczbowa 1-5
+15. Brak potrzeby śledzenia czasu ostatniego przeglądu fiszki
+16. Raporty będą generowane na żądanie
+17. Brak oznaczania fiszek jako "ulubionych"
+18. Brak limitu liczby fiszek w jednej sesji nauki
+19. Brak indeksów dla zapytań filtrujących fiszki po statusie nauki
+20. Brak mechanizmu archiwizacji nieużywanych fiszek
+</decisions>
+
+<matched_recommendations>
+1. Zaprojektowanie schematu bazy danych z tabelami: User, Category, Flashcard, LearningStatistics
+2. Dodanie flagi is_public w tabeli Flashcard do oznaczania publicznych fiszek
+3. Dodanie pola original_flashcard_id w tabeli Flashcard jako opcjonalnego klucza obcego
+4. Zastosowanie ograniczenia ON DELETE RESTRICT dla relacji Category-Flashcard
+5. Implementacja pola learning_status w tabeli Flashcard z wartościami 0-3
+6. Dodanie pola next_review_date w tabeli Flashcard
+7. Implementacja pola difficulty_level jako liczby całkowitej (1-5)
+8. Dodanie licznika kopii dla publicznych fiszek
+9. Dodanie znaczników czasu utworzenia i modyfikacji fiszek
+10. Implementacja walidacji limitu 1000 fiszek na użytkownika na poziomie aplikacji
+11. Wykorzystanie Room ORM do definiowania encji i relacji
+</matched_recommendations>
+
+<database_planning_summary>
+Na podstawie przeprowadzonej analizy wymagań i rozmowy, planowanie bazy danych dla aplikacji FlashLearn obejmuje następujące kluczowe elementy:
+
+### Struktura bazy danych
+Baza danych SQLite z wykorzystaniem Room ORM będzie zawierać cztery główne tabele:
+
+1. **User** - przechowywanie informacji o użytkownikach
+   - user_id (PRIMARY KEY)
+   - email
+   - password_hash
+   - last_login_date
+   - total_cards_reviewed
+   - correct_answers
+   - incorrect_answers
+
+2. **Category** - globalne kategorie (dziedziny) dla wszystkich użytkowników
+   - category_id (PRIMARY KEY)
+   - name
+
+3. **Flashcard** - przechowywanie fiszek użytkowników
+   - flashcard_id (PRIMARY KEY)
+   - user_id (FOREIGN KEY -> User)
+   - category_id (FOREIGN KEY -> Category)
+   - question (TEXT, limit 500 znaków)
+   - answer (TEXT, limit 1000 znaków)
+   - difficulty_level (INTEGER, skala 1-5)
+   - learning_status (INTEGER, wartości 0-3)
+   - next_review_date
+   - is_public (BOOLEAN)
+   - original_flashcard_id (FOREIGN KEY -> Flashcard, opcjonalne)
+   - copies_count (INTEGER)
+   - created_at
+   - updated_at
+
+4. **LearningStatistics** - statystyki nauki per fiszka
+   - statistic_id (PRIMARY KEY)
+   - flashcard_id (FOREIGN KEY -> Flashcard)
+   - correct_answers_count
+   - incorrect_answers_count
+
+### Relacje między encjami
+- Użytkownik (1) -> (n) Fiszki: Jeden użytkownik może posiadać wiele fiszek
+- Kategoria (1) -> (n) Fiszki: Jedna kategoria może być przypisana do wielu fiszek
+- Fiszka (1) -> (n) Fiszki: Oryginalna fiszka może mieć wiele kopii
+- Fiszka (1) -> (1) LearningStatistics: Każda fiszka ma jeden zestaw statystyk nauki
+
+### Ograniczenia i walidacje
+- Limit 1000 fiszek na użytkownika (walidacja na poziomie aplikacji)
+- Niemożność usunięcia kategorii z przypisanymi fiszkami (ON DELETE RESTRICT)
+- Ograniczenie długości pytań (500 znaków) i odpowiedzi (1000 znaków)
+
+### Mechanizmy i funkcjonalności
+- Algorytm powtórek 3-5-7 implementowany poprzez pola learning_status i next_review_date
+- System udostępniania fiszek poprzez flagę is_public
+- Śledzenie pochodzenia fiszek przez pole original_flashcard_id
+- Licznik kopii dla śledzenia popularności publicznych fiszek
+
+### Wydajność i skalowalność
+- Brak potrzeby zaawansowanego indeksowania ze względu na lokalny charakter aplikacji
+- Raporty generowane na żądanie zamiast przechowywania gotowych raportów
+- Zastosowanie Room ORM do efektywnego zarządzania operacjami na bazie danych
+</database_planning_summary>
+
+<unresolved_issues>
+1. Brak szczegółowej specyfikacji dotyczącej dokładnych typów pól w Room ORM (np. czy używać Long, Int, String itd.)
+2. Brak informacji o strategii obsługi błędów bazy danych i odzyskiwania po awariach
+3. Brak szczegółowych wymagań dotyczących wydajności zapytań dla dużych kolekcji fiszek
+4. Nieprecyzyjne określenie metody generowania raportów na żądanie i czy wymaga to dodatkowych struktur
+5. Brak szczegółowej strategii migracji schematu bazy danych w przyszłych wersjach
+</unresolved_issues>
+</conversation_summary>
+
+
+_____________________________________________________________________________________________________________________________
+
+
+Jesteś architektem baz danych, którego zadaniem jest stworzenie schematu bazy danych SQLite na podstawie informacji dostarczonych z sesji planowania, dokumentu wymagań produktu (PRD) i stacku technologicznym. Twoim celem jest zaprojektowanie wydajnej i skalowalnej struktury bazy danych, która spełnia wymagania projektu.
+
+1. <prd>
+@.ai/prd.md
+</prd>
+
+Jest to dokument wymagań produktu, który określa cechy, funkcjonalności i wymagania projektu.
+
+2. <session_notes>
+<conversation_summary>
+<decisions>
+1. Brak synchronizacji danych między urządzeniami
+2. Publiczne fiszki będą przechowywane w tej samej tabeli co prywatne, oznaczone flagą
+3. Brak systemu wersjonowania fiszek
+4. Kategorie (dziedziny) będą globalne dla wszystkich użytkowników
+5. Przechowywanie tylko ogólnych statystyk per fiszka
+6. Brak systemu tagów dla fiszek poza kategoriami
+7. Brak śledzenia historii zmian statusów fiszek
+8. Niemożność usunięcia kategorii, jeśli istnieją przypisane do niej fiszki
+9. Brak systemu oceniania/recenzowania fiszek publicznych
+10. Fiszki pozostają wyłącznie w formacie tekstowym
+11. Dla skopiowanych fiszek wystarczy pole wskazujące na oryginalną fiszkę
+12. Potrzeba śledzenia liczby kopii danej fiszki
+13. Brak dodatkowych metadanych dla kategorii poza nazwą
+14. Poziom trudności fiszki reprezentowany jako skala liczbowa 1-5
+15. Brak potrzeby śledzenia czasu ostatniego przeglądu fiszki
+16. Raporty będą generowane na żądanie
+17. Brak oznaczania fiszek jako "ulubionych"
+18. Brak limitu liczby fiszek w jednej sesji nauki
+19. Brak indeksów dla zapytań filtrujących fiszki po statusie nauki
+20. Brak mechanizmu archiwizacji nieużywanych fiszek
+</decisions>
+
+<matched_recommendations>
+1. Zaprojektowanie schematu bazy danych z tabelami: User, Category, Flashcard, LearningStatistics
+2. Dodanie flagi is_public w tabeli Flashcard do oznaczania publicznych fiszek
+3. Dodanie pola original_flashcard_id w tabeli Flashcard jako opcjonalnego klucza obcego
+4. Zastosowanie ograniczenia ON DELETE RESTRICT dla relacji Category-Flashcard
+5. Implementacja pola learning_status w tabeli Flashcard z wartościami 0-3
+6. Dodanie pola next_review_date w tabeli Flashcard
+7. Implementacja pola difficulty_level jako liczby całkowitej (1-5)
+8. Dodanie licznika kopii dla publicznych fiszek
+9. Dodanie znaczników czasu utworzenia i modyfikacji fiszek
+10. Implementacja walidacji limitu 1000 fiszek na użytkownika na poziomie aplikacji
+11. Wykorzystanie Room ORM do definiowania encji i relacji
+</matched_recommendations>
+
+<database_planning_summary>
+Na podstawie przeprowadzonej analizy wymagań i rozmowy, planowanie bazy danych dla aplikacji FlashLearn obejmuje następujące kluczowe elementy:
+
+### Struktura bazy danych
+Baza danych SQLite z wykorzystaniem Room ORM będzie zawierać cztery główne tabele:
+
+1. **User** - przechowywanie informacji o użytkownikach
+   - user_id (PRIMARY KEY)
+   - email
+   - password_hash
+   - last_login_date
+   - total_cards_reviewed
+   - correct_answers
+   - incorrect_answers
+
+2. **Category** - globalne kategorie (dziedziny) dla wszystkich użytkowników
+   - category_id (PRIMARY KEY)
+   - name
+
+3. **Flashcard** - przechowywanie fiszek użytkowników
+   - flashcard_id (PRIMARY KEY)
+   - user_id (FOREIGN KEY -> User)
+   - category_id (FOREIGN KEY -> Category)
+   - question (TEXT, limit 500 znaków)
+   - answer (TEXT, limit 1000 znaków)
+   - difficulty_level (INTEGER, skala 1-5)
+   - learning_status (INTEGER, wartości 0-3)
+   - next_review_date
+   - is_public (BOOLEAN)
+   - original_flashcard_id (FOREIGN KEY -> Flashcard, opcjonalne)
+   - copies_count (INTEGER)
+   - created_at
+   - updated_at
+
+4. **LearningStatistics** - statystyki nauki per fiszka
+   - statistic_id (PRIMARY KEY)
+   - flashcard_id (FOREIGN KEY -> Flashcard)
+   - correct_answers_count
+   - incorrect_answers_count
+
+### Relacje między encjami
+- Użytkownik (1) -> (n) Fiszki: Jeden użytkownik może posiadać wiele fiszek
+- Kategoria (1) -> (n) Fiszki: Jedna kategoria może być przypisana do wielu fiszek
+- Fiszka (1) -> (n) Fiszki: Oryginalna fiszka może mieć wiele kopii
+- Fiszka (1) -> (1) LearningStatistics: Każda fiszka ma jeden zestaw statystyk nauki
+
+### Ograniczenia i walidacje
+- Limit 1000 fiszek na użytkownika (walidacja na poziomie aplikacji)
+- Niemożność usunięcia kategorii z przypisanymi fiszkami (ON DELETE RESTRICT)
+- Ograniczenie długości pytań (500 znaków) i odpowiedzi (1000 znaków)
+
+### Mechanizmy i funkcjonalności
+- Algorytm powtórek 3-5-7 implementowany poprzez pola learning_status i next_review_date
+- System udostępniania fiszek poprzez flagę is_public
+- Śledzenie pochodzenia fiszek przez pole original_flashcard_id
+- Licznik kopii dla śledzenia popularności publicznych fiszek
+
+### Wydajność i skalowalność
+- Brak potrzeby zaawansowanego indeksowania ze względu na lokalny charakter aplikacji
+- Raporty generowane na żądanie zamiast przechowywania gotowych raportów
+- Zastosowanie Room ORM do efektywnego zarządzania operacjami na bazie danych
+</database_planning_summary>
+
+<unresolved_issues>
+1. Brak szczegółowej specyfikacji dotyczącej dokładnych typów pól w Room ORM (np. czy używać Long, Int, String itd.)
+2. Brak informacji o strategii obsługi błędów bazy danych i odzyskiwania po awariach
+3. Brak szczegółowych wymagań dotyczących wydajności zapytań dla dużych kolekcji fiszek
+4. Nieprecyzyjne określenie metody generowania raportów na żądanie i czy wymaga to dodatkowych struktur
+5. Brak szczegółowej strategii migracji schematu bazy danych w przyszłych wersjach
+</unresolved_issues>
+</conversation_summary>
+</session_notes>
+
+Są to notatki z sesji planowania schematu bazy danych. Mogą one zawierać ważne decyzje, rozważania i konkretne wymagania omówione podczas spotkania.
+
+3. <tech_stack>
+@.ai/tech-stack.md 
+</tech_stack>
+
+Opisuje stack technologiczny, który zostanie wykorzystany w projekcie, co może wpłynąć na decyzje dotyczące projektu bazy danych.
+
+Wykonaj następujące kroki, aby utworzyć schemat bazy danych:
+
+1. Dokładnie przeanalizuj notatki z sesji, identyfikując kluczowe jednostki, atrybuty i relacje omawiane podczas sesji planowania.
+2. Przejrzyj PRD, aby upewnić się, że wszystkie wymagane funkcje i funkcjonalności są obsługiwane przez schemat bazy danych.
+3. Przeanalizuj stack technologiczny i upewnij się, że projekt bazy danych jest zoptymalizowany pod kątem wybranych technologii.
+
+4. Stworzenie kompleksowego schematu bazy danych, który obejmuje
+   a. Tabele z odpowiednimi nazwami kolumn i typami danych
+   b. Klucze podstawowe i klucze obce
+   c. Indeksy poprawiające wydajność zapytań
+   d. Wszelkie niezbędne ograniczenia (np. unikalność, not null)
+
+5. Zdefiniuj relacje między tabelami, określając kardynalność (jeden-do-jednego, jeden-do-wielu, wiele-do-wielu) i wszelkie tabele łączące wymagane dla relacji wiele-do-wielu.
+
+6. Opracowanie zasad SQLite dla zabezpieczeń na poziomie wiersza (RLS), jeśli dotyczy, w oparciu o wymagania określone w notatkach z sesji lub PRD.
+
+7. Upewnij się, że schemat jest zgodny z najlepszymi praktykami projektowania baz danych, w tym normalizacji do odpowiedniego poziomu (zwykle 3NF, chyba że denormalizacja jest uzasadniona ze względu na wydajność).
+
+Ostateczny wynik powinien mieć następującą strukturę:
+```markdown
+1. Lista tabel z ich kolumnami, typami danych i ograniczeniami
+2. Relacje między tabelami
+3. Indeksy
+4. Zasady SQLite (jeśli dotyczy)
+5. Wszelkie dodatkowe uwagi lub wyjaśnienia dotyczące decyzji projektowych
+```
+
+W odpowiedzi należy podać tylko ostateczny schemat bazy danych w formacie markdown, który zapiszesz w pliku .ai/db-plan.md bez uwzględniania procesu myślowego lub kroków pośrednich. Upewnij się, że schemat jest kompleksowy, dobrze zorganizowany i gotowy do wykorzystania jako podstawa do tworzenia migracji baz danych.
+
+_____________________________________________________________________________________________________________________________
+
+
+Jesteś developerem specjalizującym się w pisaniu aplikacji na Androida z użycien baz danych SQLite i frameworku Room, którego zadaniem jest stworzenie schematu bazy danych SQLite na podstawie informacji dostarczonych z sesji planowania, dokumentu wymagań produktu (PRD) i stacku technologicznym. Twoim celem jest napisanie klas zawierających encje reprezentujące tabele opisane w <db-schema>.
+
+1. <prd>
+@.ai/prd.md
+</prd>
+
+Jest to dokument wymagań produktu, który określa cechy, funkcjonalności i wymagania projektu.
+
+2. <session_notes>
+<conversation_summary>
+<decisions>
+1. Brak synchronizacji danych między urządzeniami
+2. Publiczne fiszki będą przechowywane w tej samej tabeli co prywatne, oznaczone flagą
+3. Brak systemu wersjonowania fiszek
+4. Kategorie (dziedziny) będą globalne dla wszystkich użytkowników
+5. Przechowywanie tylko ogólnych statystyk per fiszka
+6. Brak systemu tagów dla fiszek poza kategoriami
+7. Brak śledzenia historii zmian statusów fiszek
+8. Niemożność usunięcia kategorii, jeśli istnieją przypisane do niej fiszki
+9. Brak systemu oceniania/recenzowania fiszek publicznych
+10. Fiszki pozostają wyłącznie w formacie tekstowym
+11. Dla skopiowanych fiszek wystarczy pole wskazujące na oryginalną fiszkę
+12. Potrzeba śledzenia liczby kopii danej fiszki
+13. Brak dodatkowych metadanych dla kategorii poza nazwą
+14. Poziom trudności fiszki reprezentowany jako skala liczbowa 1-5
+15. Brak potrzeby śledzenia czasu ostatniego przeglądu fiszki
+16. Raporty będą generowane na żądanie
+17. Brak oznaczania fiszek jako "ulubionych"
+18. Brak limitu liczby fiszek w jednej sesji nauki
+19. Brak indeksów dla zapytań filtrujących fiszki po statusie nauki
+20. Brak mechanizmu archiwizacji nieużywanych fiszek
+</decisions>
+
+<matched_recommendations>
+1. Zaprojektowanie schematu bazy danych z tabelami: User, Category, Flashcard, LearningStatistics
+2. Dodanie flagi is_public w tabeli Flashcard do oznaczania publicznych fiszek
+3. Dodanie pola original_flashcard_id w tabeli Flashcard jako opcjonalnego klucza obcego
+4. Zastosowanie ograniczenia ON DELETE RESTRICT dla relacji Category-Flashcard
+5. Implementacja pola learning_status w tabeli Flashcard z wartościami 0-3
+6. Dodanie pola next_review_date w tabeli Flashcard
+7. Implementacja pola difficulty_level jako liczby całkowitej (1-5)
+8. Dodanie licznika kopii dla publicznych fiszek
+9. Dodanie znaczników czasu utworzenia i modyfikacji fiszek
+10. Implementacja walidacji limitu 1000 fiszek na użytkownika na poziomie aplikacji
+11. Wykorzystanie Room ORM do definiowania encji i relacji
+</matched_recommendations>
+
+<database_planning_summary>
+Na podstawie przeprowadzonej analizy wymagań i rozmowy, planowanie bazy danych dla aplikacji FlashLearn obejmuje następujące kluczowe elementy:
+
+### Struktura bazy danych
+Baza danych SQLite z wykorzystaniem Room ORM będzie zawierać cztery główne tabele:
+
+1. **User** - przechowywanie informacji o użytkownikach
+   - user_id (PRIMARY KEY)
+   - email
+   - password_hash
+   - last_login_date
+   - total_cards_reviewed
+   - correct_answers
+   - incorrect_answers
+
+2. **Category** - globalne kategorie (dziedziny) dla wszystkich użytkowników
+   - category_id (PRIMARY KEY)
+   - name
+
+3. **Flashcard** - przechowywanie fiszek użytkowników
+   - flashcard_id (PRIMARY KEY)
+   - user_id (FOREIGN KEY -> User)
+   - category_id (FOREIGN KEY -> Category)
+   - question (TEXT, limit 500 znaków)
+   - answer (TEXT, limit 1000 znaków)
+   - difficulty_level (INTEGER, skala 1-5)
+   - learning_status (INTEGER, wartości 0-3)
+   - next_review_date
+   - is_public (BOOLEAN)
+   - original_flashcard_id (FOREIGN KEY -> Flashcard, opcjonalne)
+   - copies_count (INTEGER)
+   - created_at
+   - updated_at
+
+4. **LearningStatistics** - statystyki nauki per fiszka
+   - statistic_id (PRIMARY KEY)
+   - flashcard_id (FOREIGN KEY -> Flashcard)
+   - correct_answers_count
+   - incorrect_answers_count
+
+### Relacje między encjami
+- Użytkownik (1) -> (n) Fiszki: Jeden użytkownik może posiadać wiele fiszek
+- Kategoria (1) -> (n) Fiszki: Jedna kategoria może być przypisana do wielu fiszek
+- Fiszka (1) -> (n) Fiszki: Oryginalna fiszka może mieć wiele kopii
+- Fiszka (1) -> (1) LearningStatistics: Każda fiszka ma jeden zestaw statystyk nauki
+
+### Ograniczenia i walidacje
+- Limit 1000 fiszek na użytkownika (walidacja na poziomie aplikacji)
+- Niemożność usunięcia kategorii z przypisanymi fiszkami (ON DELETE RESTRICT)
+- Ograniczenie długości pytań (500 znaków) i odpowiedzi (1000 znaków)
+
+### Mechanizmy i funkcjonalności
+- Algorytm powtórek 3-5-7 implementowany poprzez pola learning_status i next_review_date
+- System udostępniania fiszek poprzez flagę is_public
+- Śledzenie pochodzenia fiszek przez pole original_flashcard_id
+- Licznik kopii dla śledzenia popularności publicznych fiszek
+
+### Wydajność i skalowalność
+- Brak potrzeby zaawansowanego indeksowania ze względu na lokalny charakter aplikacji
+- Raporty generowane na żądanie zamiast przechowywania gotowych raportów
+- Zastosowanie Room ORM do efektywnego zarządzania operacjami na bazie danych
+</database_planning_summary>
+
+<unresolved_issues>
+1. Brak szczegółowej specyfikacji dotyczącej dokładnych typów pól w Room ORM (np. czy używać Long, Int, String itd.)
+2. Brak informacji o strategii obsługi błędów bazy danych i odzyskiwania po awariach
+3. Brak szczegółowych wymagań dotyczących wydajności zapytań dla dużych kolekcji fiszek
+4. Nieprecyzyjne określenie metody generowania raportów na żądanie i czy wymaga to dodatkowych struktur
+5. Brak szczegółowej strategii migracji schematu bazy danych w przyszłych wersjach
+</unresolved_issues>
+</conversation_summary>
+</session_notes>
+
+Są to notatki z sesji planowania schematu bazy danych. Mogą one zawierać ważne decyzje, rozważania i konkretne wymagania omówione podczas spotkania.
+
+3. <tech_stack>
+@.ai/tech-stack.md 
+</tech_stack>
+
+Opisuje stack technologiczny, który zostanie wykorzystany w projekcie, co może wpłynąć na decyzje dotyczące projektu bazy danych.
+
+4. <db-schema>
+@.ai/db-plan.md
+<db-schema>
+
+Zawiera szczegółówe dane o tabelach: 
+1. Lista tabel z ich kolumnami, typami danych i ograniczeniami
+2. Relacje między tabelami
+3. Indeksy
+4. Zasady SQLite (jeśli dotyczy)
+5. Wszelkie dodatkowe uwagi lub wyjaśnienia dotyczące decyzji projektowych
+
+
+Wykonaj następujące kroki, aby utworzyć schemat bazy danych:
+
+1. Dokładnie przeanalizuj notatki z sesji, identyfikując kluczowe jednostki, atrybuty i relacje omawiane podczas sesji planowania.
+2. Przejrzyj PRD, aby upewnić się, że wszystkie wymagane funkcje i funkcjonalności są obsługiwane przez schemat bazy danych.
+3. Przeanalizuj stack technologiczny i upewnij się, że projekt bazy danych jest zoptymalizowany pod kątem wybranych technologii.
+4. Przeanalizuj szczegółowe dane o tabelach
+5. Stwórz encje w folderze: com\an\intelligence\flashyfishki\domain\model
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+I've created the complete Room database schema for the FlashyFishkiAI application based on the provided requirements. Here's a summary of what was implemented:
+User Entity:
+Fields for user identification, authentication, and learning statistics
+Primary key with auto-generation
+Category Entity:
+Simple entity with ID and name
+Used for organizing flashcards by topic/domain
+Flashcard Entity:
+Core entity with all flashcard data
+Foreign keys to User and Category with appropriate deletion strategies
+Self-referencing foreign key for original flashcard tracking
+Fields for learning algorithm (status, next review date)
+Metadata fields (creation time, update time, etc.)
+Proper indices for performance
+LearningStatistics Entity:
+Per-flashcard learning statistics
+Connected to flashcard via foreign key with CASCADE delete
+Unique index on flashcardId to ensure one statistic per flashcard
+Type Converters:
+For handling Date objects in Room database
+Database Class:
+Configuration for Room database with all entities
+Type converter registration
+Version management
+The schema follows all the requirements from the planning session, including:
+No user data synchronization (local database)
+Public/private flashcards distinguished by a flag
+Global categories for all users
+Restricted deletion of categories with flashcards
+Learning status tracking for spaced repetition
+Copy tracking for public flashcards
+Proper timestamps for creation and updates
+This implementation provides a solid foundation for the FlashyFishkiAI application's data layer.

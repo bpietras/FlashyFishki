@@ -1,0 +1,255 @@
+CLAUDE 3.7.SONNET
+
+
+Jesteś doświadczonym menedżerem produktu, którego zadaniem jest pomoc w stworzeniu kompleksowego dokumentu wymagań projektowych (PRD) na podstawie dostarczonych informacji. Twoim celem jest wygenerowanie listy pytań i zaleceń, które zostaną wykorzystane w kolejnym promptowaniu do utworzenia pełnego PRD.
+
+Prosimy o uważne zapoznanie się z poniższymi informacjami:
+
+<project_description>
+### Główny problem
+Manualne tworzenie wysokiej jakości fiszek edukacyjnych jest czasochłonne, co zniechęca do korzystania z efektywnej metody nauki jaką jest spaced repetition.
+
+### Najmniejszy zestaw funkcjonalności
+- Manualne tworzenie fiszek
+- Przeglądanie, edycja i usuwanie fiszek
+- Podglądanie fiszek udostępnionych przez innych użytkowników
+- Prosty system kont użytkowników do przechowywania fiszek
+- Integracja fiszek z gotowym algorytmem powtórek
+
+### Co NIE wchodzi w zakres MVP
+- Własny, zaawansowany algorytm powtórek (jak SuperMemo, Anki)
+- Import wielu formatów (PDF, DOCX, itp.)
+- Integracje z innymi platformami edukacyjnymi
+- Aplikacje webowe (na początek tylko mobilne)
+
+### Kryteria sukcesu
+- 50% fiszek użytkownika pochodzi od innych użytkowników
+- 75% fiszek użytkownika jest udostępnianych innym użytkownikom
+</project_description>
+
+Przeanalizuj dostarczone informacje, koncentrując się na aspektach istotnych dla tworzenia PRD. Rozważ następujące kwestie:
+<prd_analysis>
+1. Zidentyfikuj główny problem, który produkt ma rozwiązać.
+2. Określ kluczowe funkcjonalności MVP.
+3. Rozważ potencjalne historie użytkownika i ścieżki korzystania z produktu.
+4. Pomyśl o kryteriach sukcesu i sposobach ich mierzenia.
+5. Oceń ograniczenia projektowe i ich wpływ na rozwój produktu.
+</prd_analysis>
+
+Na podstawie analizy wygeneruj listę pytań i zaleceń. Powinny one dotyczyć wszelkich niejasności, potencjalnych problemów lub obszarów, w których potrzeba więcej informacji, aby stworzyć skuteczny PRD. Rozważ pytania dotyczące:
+
+1. Szczegółów problemu użytkownika
+2. Priorytetyzacji funkcjonalności
+3. Oczekiwanego doświadczenia użytkownika
+4. Mierzalnych wskaźników sukcesu
+5. Potencjalnych ryzyk i wyzwań
+6. Harmonogramu i zasobów
+
+<pytania>
+[Wymień tutaj swoje pytania, ponumerowane dla jasności].
+</pytania>
+
+<rekomendacje>
+[Wymień tutaj swoje zalecenia, ponumerowane dla jasności]
+</rekomendacje>
+
+Kontynuuj ten proces, generując nowe pytania i rekomendacje w oparciu o odpowiedzi użytkownika, dopóki użytkownik wyraźnie nie poprosi o podsumowanie.
+
+Pamiętaj, aby skupić się na jasności, trafności i dokładności wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.
+
+Pracę analityczną należy przeprowadzić w bloku myślenia. Końcowe dane wyjściowe powinny składać się wyłącznie z pytań i zaleceń i nie powinny powielać ani powtarzać żadnej pracy wykonanej w sekcji prd_analysis.
+
+________________________________________________________________________________________________________________________________
+
+# Analiza PRD dla aplikacji z fiszkami edukacyjnymi
+
+<pytania>
+1. Jaka jest docelowa grupa użytkowników? (studenci, uczniowie, profesjonaliści, nauczyciele)
+2. Jakie konkretne platformy mobilne będą obsługiwane w MVP? (iOS, Android, czy obie)
+3. Jak dokładnie ma działać udostępnianie fiszek między użytkownikami? (model subskrypcji, bezpośrednie udostępnianie, publiczna biblioteka)
+4. Jaki algorytm powtórek planujemy zintegrować? (istniejące rozwiązanie czy własna implementacja)
+5. Jakie kategorie/tagi/metadane będą przypisane do fiszek dla lepszej organizacji?
+6. Czy planujemy jakieś mechanizmy weryfikacji jakości udostępnianych fiszek?
+7. Jak będzie wyglądał proces rejestracji i logowania użytkowników?
+8. Jakie dane będziemy zbierać o użytkownikach i ich aktywności?
+9. Czy przewidujemy jakieś mechanizmy gamifikacji dla zwiększenia zaangażowania?
+10. Jakie są oczekiwania dotyczące czasu ładowania i responsywności aplikacji?
+11. Jak będziemy mierzyć wskaźniki sukcesu (50% fiszek od innych, 75% udostępnianych)?
+12. Czy planujemy jakieś funkcje społecznościowe poza udostępnianiem fiszek?
+13. Jakie formaty treści będą obsługiwane w fiszkach? (tekst, obrazy, dźwięk)
+14. Jaki jest przewidywany harmonogram rozwoju MVP?
+15. Jakie są plany monetyzacji aplikacji?
+</pytania>
+
+<rekomendacje>
+1. Zdefiniować szczegółowy model udostępniania fiszek, który zachęci użytkowników do dzielenia się wiedzą
+2. Stworzyć system kategoryzacji i tagowania fiszek dla łatwiejszego wyszukiwania
+3. Zaimplementować prosty mechanizm oceny jakości fiszek przez społeczność
+4. Zaprojektować intuicyjny interfejs tworzenia fiszek, który minimalizuje barierę wejścia
+5. Wprowadzić podstawowe elementy gamifikacji (odznaki, poziomy) dla zwiększenia zaangażowania
+6. Opracować jasne metryki do śledzenia kryteriów sukcesu
+7. Zdefiniować minimalny zestaw metadanych dla fiszek (autor, data utworzenia, kategoria, poziom trudności)
+8. Stworzyć prosty system rekomendacji fiszek na podstawie historii użytkownika
+9. Zapewnić możliwość tworzenia prywatnych i publicznych kolekcji fiszek
+10. Zaimplementować funkcję wyszukiwania fiszek według różnych kryteriów
+11. Zaprojektować mechanizm zgłaszania nieodpowiednich treści w udostępnianych fiszkach
+12. Opracować strategię onboardingu dla nowych użytkowników
+13. Zdefiniować jasną politykę prywatności i własności intelektualnej dla udostępnianych treści
+14. Stworzyć mechanizm eksportu własnych fiszek (na wypadek chęci zmiany platformy)
+15. Zaprojektować interfejs statystyk postępów nauki dla zwiększenia motywacji użytkowników
+</rekomendacje>
+
+------------------------------------------------------------------------------------------------------------------
+
+<odpowiedzi>
+1. Uczniowe, studenci, nauczyciele
+2. Tylko Android
+3. Publiczna biblioteka - użytkownicy oznaczają fiszki, którymi chcą się podzielić
+4. Własna implementacja algorytmu 3-5-7
+5. Metadane - dziedzina, trudność, gotowa do udostępnienia, liczba pobrań przez innych użytkowników, pochodzenie (oryginalna lub z udostępniania)
+6. Nie
+7. Standardowo - użytkownik podaje mail i hasło podczas rejestracji, które zapisywane są do bazy; dane te są używane przy logowaniu - mail jako login i hasło jako hasło
+8. Czas ostatniego logowania
+9. Nie
+10. Cold start: mniej niż 5 sek. Warm start: mniej niż 2 sek. W przypadku dłuższego ładowania aplikacja powinna wyświetlić pasek postępu lub animację ładowania
+11. Cotygodniowy raport na podstawie danych z fiszek (liczba fiszek stworzonych, liczba fiszek gotowych do udostępnienia, liczba fiszek pobranych od innych użytkowników)
+12. Nie
+13. Tekst
+14. Od stworzenia bazy danych, logiki backendowej (obsługującej rejestrację i logowanie użytkownika, tworzenie fiszek, proces powtarzania fiszek, testy) i frontendowej
+15. Aplikacja będzie darmowa
+</odpowiedzi/>
+
+W rekomendacjach zrezygnuj z:
+- mechanizmu oceny fiszek przez społeczność
+- elementów gamefikacji
+- proponowania fiszek na podstawie historii użytkownika
+- systemu zgłaszania niedopowiednich treści
+- onboardingu użytkowników
+- polityki prywatności
+- eksportu fiszek do plików innych niż *.md
+- interfejsu statystyk postępów
+
+
+_____________________________________________________________________________________________________________________________
+
+# Analiza PRD dla aplikacji z fiszkami edukacyjnymi
+
+<pytania>
+1. Jakie konkretne funkcje będzie oferować algorytm 3-5-7 i jak będzie zintegrowany z systemem fiszek?
+2. Jak będzie wyglądać interfejs tworzenia fiszek? (struktura, pola, limity znaków)
+3. Czy będzie możliwość edycji fiszek po ich utworzeniu i udostępnieniu?
+4. Jak będzie zorganizowana publiczna biblioteka fiszek? (sortowanie, filtrowanie)
+5. Jakie minimalne wymagania sprzętowe i wersję Androida powinna obsługiwać aplikacja?
+6. Jak będzie wyglądał proces oznaczania fiszek jako "gotowe do udostępnienia"?
+7. Czy istnieją jakieś ograniczenia co do liczby fiszek, które użytkownik może utworzyć/pobrać?
+8. Jak będą przechowywane dane użytkowników i fiszek? (lokalna baza, chmura)
+9. Czy planujemy jakieś mechanizmy zabezpieczające przed utratą danych?
+10. Jakie są oczekiwania dotyczące wydajności aplikacji przy dużej liczbie fiszek?
+11. Czy będzie możliwość wyszukiwania konkretnych fiszek w bibliotece?
+12. Jak będzie wyglądał proces powtarzania fiszek według algorytmu 3-5-7?
+13. Czy aplikacja będzie działać offline, czy wymaga stałego połączenia z internetem?
+14. Jakie są plany dotyczące wsparcia technicznego po wydaniu MVP?
+15. Czy planowane są jakieś przyszłe rozszerzenia funkcjonalności po MVP?
+</pytania>
+
+<rekomendacje>
+1. Zdefiniować szczegółowy model udostępniania fiszek, który zachęci użytkowników do dzielenia się wiedzą
+2. Stworzyć przejrzysty system kategoryzacji i tagowania fiszek dla łatwiejszego wyszukiwania
+3. Zaprojektować intuicyjny interfejs tworzenia fiszek, który minimalizuje barierę wejścia
+4. Opracować jasne metryki do śledzenia kryteriów sukcesu (50% fiszek od innych, 75% udostępnianych)
+5. Zdefiniować minimalny zestaw metadanych dla fiszek (dziedzina, trudność, gotowa do udostępnienia)
+6. Zapewnić możliwość tworzenia prywatnych i publicznych kolekcji fiszek
+7. Zaimplementować funkcję wyszukiwania fiszek według różnych kryteriów (dziedzina, trudność)
+8. Zoptymalizować wydajność aplikacji dla różnych urządzeń z systemem Android
+9. Zapewnić mechanizm synchronizacji danych między urządzeniem a serwerem
+10. Zaprojektować czytelny interfejs publicznej biblioteki fiszek
+11. Opracować efektywny sposób prezentacji liczby pobrań fiszek jako wskaźnika ich popularności
+12. Zaimplementować mechanizm oznaczania pochodzenia fiszek (oryginalna lub z udostępniania)
+13. Stworzyć przejrzysty interfejs procesu powtarzania fiszek według algorytmu 3-5-7
+14. Zapewnić stabilność aplikacji przy dłuższym użytkowaniu
+15. Zaimplementować mechanizm kopii zapasowych dla danych użytkownika
+</rekomendacje>
+
+------------------------------------------------------------------------------------------------------------------
+
+<odpowiedzi>
+1. Oznaczenie fiszek wg dni (Dzień 1 – nauka nowej fiszki, status - 0; Dzień 3 – pierwsza powtórka, status - 1; Dzień 5 – druga powtórka, status - 2; Dzień 7 – trzecia powtórka, status - 3), powtarzanie fiszki rosnąco aż fiszka osiągnie status 3
+2. Podczas tworzenia fiszki użytkownik podaje pytanie i odpowiedź oraz oznacza czy chce udostępnić fiszkę; pytanie krótsze lub równe 500 znaków, odpowiedź krótsza lub równa 1000 znaków
+3. Tak
+4. Filtrowanie po dziedzinie, trudności; sortowanie po dacie stworzenia fiszki
+5. Android 16, wersja API 32
+6. Podczas tworzenia lub edycji fiszek użytkownik oznacza true (do udostępnienia) lub false (nieudostępniona)
+7. Maksymalnie 1000 fiszek na użytkownika
+8. Lokalna baza
+9. Nie
+10. Jeśli aplikacja będzie działać wolniej niż zaplanowano, dodane zostanie stronicowanie
+11. Nie 
+12. Użytkownik wybiera dziedzinę a fiszki pokazują się w kolejności od statusu 0 do 2; przy każdej fiszce użytkownik zaznacza czy odpowiedział dobrze (status fiszki rośnie o 1) czy źle (status fiszki spada do 0); fiszki ze statusem 3 uznawane są za nauczone i nie pokazują się użytkownikowi
+13. Nie wymaga stałego połączenia z internetem
+14. Użytownicy będą mogli zgłaszać problemy pisząc mail
+15. Tak ale nie przejmuj się nimi teraz
+</odpowiedzi>
+
+W rekomendacjach zrezygnuj z:
+- mechanizmu synchronizacji danych między urządzeniem a serwerem
+- efektywnego sposóbu prezentacji liczby pobrań fiszek jako wskaźnika ich popularności
+
+____________________________________________________________________________________________________________________________
+
+# Analiza PRD dla aplikacji z fiszkami edukacyjnymi
+
+<pytania>
+1. Czy użytkownik będzie mógł tworzyć własne dziedziny/kategorie dla fiszek, czy będą one predefiniowane?
+2. Czy będzie możliwość usuwania fiszek? Jeśli tak, to czy będzie to wpływać na udostępnione kopie?
+3. Jak będzie wyglądać interfejs przeglądania fiszek w trybie nauki?
+4. Czy użytkownik będzie mógł określać poziom trudności fiszki podczas jej tworzenia?
+5. Czy będzie możliwość grupowania fiszek w zestawy/kolekcje?
+6. Jak będzie wyglądał proces pobierania fiszek od innych użytkowników?
+7. Czy aplikacja będzie monitorować postępy użytkownika w nauce?
+8. Czy będzie możliwość przywrócenia fiszek ze statusem 3 (nauczone) do powtórek?
+9. Jak będzie wyglądał cotygodniowy raport z postępów nauki?
+10. Czy będzie limit dzienny fiszek do nauki/powtórek?
+11. Jak będzie wyglądał mechanizm wyboru dziedziny przy rozpoczęciu nauki?
+12. Czy fiszki będą miały jakieś dodatkowe atrybuty poza pytaniem i odpowiedzią?
+13. Jak dokładnie będzie wyglądał proces weryfikacji odpowiedzi (samoocena czy automatyczna weryfikacja)?
+14. Czy będzie możliwość eksportu fiszek do formatu .md?
+15. Jak będzie wyglądać interfejs wyboru fiszek do pobrania z publicznej biblioteki?
+</pytania>
+
+<rekomendacje>
+1. Zdefiniować szczegółowy model udostępniania fiszek, który zachęci użytkowników do dzielenia się wiedzą
+2. Stworzyć przejrzysty system kategoryzacji i tagowania fiszek dla łatwiejszego wyszukiwania
+3. Zaprojektować intuicyjny interfejs tworzenia fiszek, który minimalizuje barierę wejścia
+4. Opracować jasne metryki do śledzenia kryteriów sukcesu (50% fiszek od innych, 75% udostępnianych)
+5. Zdefiniować minimalny zestaw metadanych dla fiszek (dziedzina, trudność, gotowa do udostępnienia)
+6. Zapewnić możliwość tworzenia prywatnych i publicznych kolekcji fiszek
+7. Zaimplementować funkcję filtrowania fiszek według dziedziny i trudności
+8. Zoptymalizować wydajność aplikacji dla różnych urządzeń z systemem Android
+9. Zaprojektować czytelny interfejs publicznej biblioteki fiszek
+10. Zaimplementować mechanizm oznaczania pochodzenia fiszek (oryginalna lub z udostępniania)
+11. Stworzyć przejrzysty interfejs procesu powtarzania fiszek według algorytmu 3-5-7
+12. Zapewnić stabilność aplikacji przy dłuższym użytkowaniu i dużej liczbie fiszek
+13. Zaimplementować mechanizm kopii zapasowych dla danych użytkownika
+14. Zaprojektować intuicyjny interfejs samooceny podczas powtarzania fiszek
+15. Stworzyć system zarządzania limitem 1000 fiszek na użytkownika
+</rekomendacje>
+
+------------------------------------------------------------------------------------------------------------------------------
+
+<odpowiedzi>
+1. Użytkownik będzie mógł tworzyć własne dziedziny
+2. Fiszki będą mogły zostać usunięte ale udostępnione kopie pozostają bez zmian
+3. Pokazania pytania, użytkownik klika przycisz 'pokaż odpowiedź' i pod pytaniem pokazuje się odpowiedź, użytkownik zaznacza czy odpowiedział dobrze czy źle i klika przycisk 'następna' jeśli chce kontynuować lub 'koniec' jeśli chce zakończyć i wrócić do głównego ekranu
+4. Podczas tworzenia lub edycji 
+5. Tylko per dziedzina
+6. Po wyświetleniu fiszki z listy, użytkownik będzie mógł kliknąć przycisk 'pobierz' i fiszka kopiuje się
+7. Nie
+8. Tak
+9. Liczba wszystkich fiszek przejrzanych w ciągu ostatnich 7 dni, na ile odpowiedziano dobrze a na ile źle, podzielone na dziedziny
+10. Nie
+11. Lista dziedzin będzie tworzona na podstawie fiszek użytkownika
+12. W bazie powinny być przechowywane takie dane jak: identyfikator fiszki, dziedzina, trudność, timestamp stworzenia, pytanie, odpowiedź, użytkownik, status, czy jest gotowa do udostępnienia, źródło (stworzona przez użytkownika czy skopiowana od innego użytkownika)
+13. Samoocena
+14. Tak
+15. Tabela z filtrowaniem po dziedzinie, sortowaniem po czasie stworzenia, oznaczeniem czy dana fiszka została już skopiowana
+</odpowiedzi>

@@ -1,0 +1,97 @@
+CLAUDE SONNET 3.7
+
+<tech-stack>
+Kotlin: Version 2.0.0
+Android Gradle Plugin (AGP): Version 8.5.1
+Jetpack Compose: Version 2024.06.00 (Compose BOM)
+AndroidX Core KTX: Version 1.13.1
+JUnit: Version 4.13.2
+AndroidX JUnit: Version 1.2.1
+Espresso Core: Version 3.6.1
+Dagger Hilt: Version 2.51.1
+Hilt Navigation Compose: Version 1.2.0
+Lifecycle Runtime KTX: Version 2.8.3
+Activity Compose: Version 1.9.1
+Navigation Compose: Version 2.8.0-beta05
+Material Icons Extended: Version 1.6.8
+Kotlinx Serialization: Version 1.6.3
+Room: Version 2.6.1
+KSP (Kotlin Symbol Processing): Version 2.0.0-1.0.21
+<tech-stack>
+
+Dokonaj krytycznej lecz rzeczowej analizy czy <tech-stack> odpowiednio adresuje potrzeby @ai/prd.md. Rozważ następujące pytania:
+1. Czy technologia pozwoli nam szybko dostarczyć MVP?
+2. Czy rozwiązanie będzie skalowalne w miarę wzrostu projektu?
+3. Czy koszt utrzymania i rozwoju będzie akceptowalny?
+4. Czy potrzebujemy aż tak złożonego rozwiązania?
+5. Czy nie istnieje prostsze podejście, które spełni nasze wymagania?
+6. Czy technologie pozwoli nam zadbać o odpowiednie bezpieczeństwo?
+Dokonaj krytycznej lecz rzeczowej analizy czy <tech-stack> odpowiednio adresuje potrzeby @prd.md. Rozważ następujące pytania:
+1. Czy technologia pozwoli nam szybko dostarczyć MVP?
+2. Czy rozwiązanie będzie skalowalne w miarę wzrostu projektu?
+3. Czy koszt utrzymania i rozwoju będzie akceptowalny?
+4. Czy potrzebujemy aż tak złożonego rozwiązania?
+5. Czy nie istnieje prostsze podejście, które spełni nasze wymagania?
+6. Czy technologie pozwoli nam zadbać o odpowiednie bezpieczeństwo?
+
+
+
+Explanations
+
+Here's an explanation of what each framework is used for in your project:
+
+1. **Kotlin (Version 2.0.0)**: Kotlin is a modern programming language that is fully interoperable with Java. It is used for developing Android applications and is known for its concise syntax and safety features.
+
+2. **Android Gradle Plugin (AGP) (Version 8.5.1)**: This plugin is used to build Android applications. It provides the necessary tools and APIs to compile, package, and deploy Android apps.
+
+3. **Jetpack Compose (Version 2024.06.00)**: Jetpack Compose is a modern toolkit for building native Android UI. It simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.
+
+4. **AndroidX Core KTX (Version 1.13.1)**: This library provides Kotlin extensions for Android Jetpack libraries, making them more idiomatic to Kotlin and easier to use.
+
+5. **JUnit (Version 4.13.2)**: JUnit is a popular testing framework for Java applications. It is used to write and run repeatable automated tests to ensure code quality.
+
+6. **AndroidX JUnit (Version 1.2.1)**: This is an extension of JUnit for Android, providing additional testing features specifically for Android applications.
+
+7. **Espresso Core (Version 3.6.1)**: Espresso is a testing framework for Android that provides APIs to write UI tests. It is used to simulate user interactions and verify UI elements in Android apps.
+
+8. **Dagger Hilt (Version 2.51.1)**: Hilt is a dependency injection library for Android that simplifies the process of providing dependencies to different parts of an application, improving modularity and testability.
+
+9. **Hilt Navigation Compose (Version 1.2.0)**: This library integrates Hilt with Jetpack Compose's navigation component, allowing for dependency injection in navigation graphs.
+
+10. **Lifecycle Runtime KTX (Version 2.8.3)**: This library provides Kotlin extensions for Android's lifecycle components, making it easier to manage the lifecycle of UI components.
+
+11. **Activity Compose (Version 1.9.1)**: This library provides integration between Jetpack Compose and Android's activity lifecycle, allowing Compose UI to be used within Android activities.
+
+12. **Navigation Compose (Version 2.8.0-beta05)**: This library provides a navigation component for Jetpack Compose, allowing developers to manage app navigation in a declarative way.
+
+13. **Material Icons Extended (Version 1.6.8)**: This library provides extended material design icons for use in Android applications, allowing for a wider range of icons in UI design.
+
+14. **Kotlinx Serialization (Version 1.6.3)**: This library provides serialization and deserialization capabilities for Kotlin data classes, making it easier to convert between Kotlin objects and JSON or other formats.
+
+15. **Room (Version 2.6.1)**: Room is a persistence library that provides an abstraction layer over SQLite, making it easier to work with databases in Android applications.
+
+16. **KSP (Kotlin Symbol Processing) (Version 2.0.0-1.0.21)**: KSP is a tool for processing Kotlin code at compile time, allowing developers to generate code, perform analysis, and more, similar to Java's annotation processing.
+
+These frameworks collectively provide a robust set of tools for building, testing, and managing Android applications efficiently.
+
+
+
+<tech-stack>
+
+Kotlin 2.0.0 i Jetpack Compose to nowoczesne technologie wspierane przez Google:
+- Jetpack Compose znacząco przyspiesza tworzenie interfejsu użytkownika w porównaniu do tradycyjnego XML-owego podejścia, co jest kluczowe przy tworzeniu ekranów do zarządzania fiszkami, przeglądania biblioteki i raportów
+- Navigation Compose ułatwi implementację nawigacji między ekranami aplikacji
+- Hilt uprości wstrzykiwanie zależności, co przyspieszy rozwój
+
+Baza danych:
+- SQLite to lekka, wbudowana baza danych, która działa bez potrzeby instalowania osobnego serwera. Jest bardzo popularna w aplikacjach mobilnych, desktopowych i wbudowanych systemach, gdzie potrzebna jest prosta, lokalna baza danych.
+- Room zapewnia gotowe rozwiązanie do lokalnej bazy danych, co jest zgodne z wymaganiem przechowywania danych offline
+
+Testowanie:
+- AndroidX JUnit to rozszerzenie JUnit dla Androida, które dostarcza dodatkowe funkcje testowania specyficzne dla aplikacji Android
+- Espresso Core to framework testowy dla Androida, który dostarcza API do pisania testów interfejsu użytkownika. Jest używany do symulacji interakcji użytkownika i weryfikacji elementów UI w aplikacjach Android.
+
+CI/CD i Hosting:
+- Github Actions do tworzenia pipeline’ów CI/CD
+
+<tech-stack>
