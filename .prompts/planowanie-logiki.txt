@@ -238,3 +238,8 @@ Dzięki tym zmianom, kod jest bardziej zorganizowany, uniknięto duplikacji, a l
 - CategoryDao: operacje na kategoriach
 - LearningStatisticsDao: rejestrowanie i aktualizacja statystyk nauki
 - ReportDao: generowanie raportów i statystyk
+
+_____________________________________________________________________________________________
+
+Popraw nazwy kolumn w klasach encji, aby były zgodne z konwencją nazewniczą używaną w Kotlinie a nie w SQLite (camelCase zamiast snake_case).
++ kilka dodatkowych promptów szczegółowo opisujących jakie zmian jeszcze brakuje

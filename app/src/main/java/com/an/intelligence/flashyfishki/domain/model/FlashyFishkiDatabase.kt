@@ -16,7 +16,7 @@ import com.an.intelligence.flashyfishki.domain.dao.UserDao
         Flashcard::class,
         LearningStatistics::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

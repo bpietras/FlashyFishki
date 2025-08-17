@@ -25,45 +25,45 @@ interface CategoryDao {
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAllCategories(): Flow<List<Category>>
     
-    @Query("SELECT * FROM categories WHERE id = :categoryId")
+    @Query("SELECT * FROM categories WHERE categoryId = :categoryId")
     suspend fun getCategoryById(categoryId: Long): Category?
     
     @Query("SELECT * FROM categories WHERE name = :name LIMIT 1")
     suspend fun getCategoryByName(name: String): Category?
     
-    @Query("SELECT EXISTS(SELECT 1 FROM flashcards WHERE category_id = :categoryId LIMIT 1)")
+    @Query("SELECT EXISTS(SELECT 1 FROM flashcards WHERE categoryId = :categoryId LIMIT 1)")
     suspend fun hasCategoryFlashcards(categoryId: Long): Boolean
     
     @Query("""
-        SELECT c.*, COUNT(f.id) as flashcardCount
+        SELECT c.*, COUNT(f.flashcardId) as flashcardCount
         FROM categories c
-        LEFT JOIN flashcards f ON c.id = f.category_id
-        GROUP BY c.id
+        LEFT JOIN flashcards f ON c.categoryId = f.categoryId
+        GROUP BY c.categoryId
         ORDER BY c.name ASC
     """)
     fun getCategoriesWithFlashcardCount(): Flow<List<CategoryWithCount>>
     
     @Query("""
-        SELECT c.*, COUNT(f.id) as flashcardCount
+        SELECT c.*, COUNT(f.flashcardId) as flashcardCount
         FROM categories c
-        JOIN flashcards f ON c.id = f.category_id
-        WHERE f.user_id = :userId
-        GROUP BY c.id
+        JOIN flashcards f ON c.categoryId = f.categoryId
+        WHERE f.userId = :userId
+        GROUP BY c.categoryId
         ORDER BY c.name ASC
     """)
     fun getUserCategoriesWithFlashcardCount(userId: Long): Flow<List<CategoryWithCount>>
     
     @Query("""
         SELECT c.*, 
-               COUNT(f.id) as flashcardCount,
-               SUM(CASE WHEN f.learning_status = 0 THEN 1 ELSE 0 END) as newCount,
-               SUM(CASE WHEN f.learning_status = 1 THEN 1 ELSE 0 END) as firstRepeatCount,
-               SUM(CASE WHEN f.learning_status = 2 THEN 1 ELSE 0 END) as secondRepeatCount,
-               SUM(CASE WHEN f.learning_status = 3 THEN 1 ELSE 0 END) as learnedCount
+               COUNT(f.flashcardId) as flashcardCount,
+               SUM(CASE WHEN f.learningStatus = 0 THEN 1 ELSE 0 END) as newCount,
+               SUM(CASE WHEN f.learningStatus = 1 THEN 1 ELSE 0 END) as firstRepeatCount,
+               SUM(CASE WHEN f.learningStatus = 2 THEN 1 ELSE 0 END) as secondRepeatCount,
+               SUM(CASE WHEN f.learningStatus = 3 THEN 1 ELSE 0 END) as learnedCount
         FROM categories c
-        JOIN flashcards f ON c.id = f.category_id
-        WHERE f.user_id = :userId
-        GROUP BY c.id
+        JOIN flashcards f ON c.categoryId = f.categoryId
+        WHERE f.userId = :userId
+        GROUP BY c.categoryId
         ORDER BY c.name ASC
     """)
     fun getUserCategoriesWithLearningStats(userId: Long): Flow<List<CategoryWithLearningStats>>

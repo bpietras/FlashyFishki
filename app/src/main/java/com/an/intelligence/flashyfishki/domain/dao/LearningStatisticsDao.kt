@@ -23,39 +23,39 @@ interface LearningStatisticsDao {
     @Delete
     suspend fun deleteStatistics(learningStatistics: LearningStatistics)
     
-    @Query("SELECT * FROM learning_statistics WHERE flashcard_id = :flashcardId")
+    @Query("SELECT * FROM learningStatistics WHERE flashcardId = :flashcardId")
     suspend fun getStatisticsByFlashcardId(flashcardId: Long): LearningStatistics?
     
     @Query("""
-        SELECT * FROM learning_statistics 
-        WHERE flashcard_id IN (
-            SELECT id FROM flashcards WHERE user_id = :userId
+        SELECT * FROM learningStatistics 
+        WHERE flashcardId IN (
+            SELECT flashcardId FROM flashcards WHERE userId = :userId
         )
     """)
     fun getUserStatistics(userId: Long): Flow<List<LearningStatistics>>
     
     @Query("""
-        SELECT * FROM learning_statistics 
-        WHERE flashcard_id IN (
-            SELECT id FROM flashcards 
-            WHERE user_id = :userId AND category_id = :categoryId
+        SELECT * FROM learningStatistics 
+        WHERE flashcardId IN (
+            SELECT flashcardId FROM flashcards 
+            WHERE userId = :userId AND categoryId = :categoryId
         )
     """)
     fun getUserStatisticsByCategory(userId: Long, categoryId: Long): Flow<List<LearningStatistics>>
     
     @Query("""
-        UPDATE learning_statistics 
-        SET correct_answers_count = correct_answers_count + 1,
-            last_updated = :updateTime
-        WHERE flashcard_id = :flashcardId
+        UPDATE learningStatistics 
+        SET correctAnswersCount = correctAnswersCount + 1,
+            lastUpdated = :updateTime
+        WHERE flashcardId = :flashcardId
     """)
     suspend fun incrementCorrectAnswers(flashcardId: Long, updateTime: Date)
     
     @Query("""
-        UPDATE learning_statistics 
-        SET incorrect_answers_count = incorrect_answers_count + 1,
-            last_updated = :updateTime
-        WHERE flashcard_id = :flashcardId
+        UPDATE learningStatistics 
+        SET incorrectAnswersCount = incorrectAnswersCount + 1,
+            lastUpdated = :updateTime
+        WHERE flashcardId = :flashcardId
     """)
     suspend fun incrementIncorrectAnswers(flashcardId: Long, updateTime: Date)
     

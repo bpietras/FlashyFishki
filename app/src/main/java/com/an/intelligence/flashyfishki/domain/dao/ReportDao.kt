@@ -10,30 +10,30 @@ interface ReportDao {
     // Tygodniowe statystyki użytkownika
     @Query("""
         SELECT 
-            COUNT(DISTINCT f.id) as reviewedCount,
-            SUM(ls.correct_answers_count) as correctCount,
-            SUM(ls.incorrect_answers_count) as incorrectCount
+            COUNT(DISTINCT f.flashcardId) as reviewedCount,
+            SUM(ls.correctAnswersCount) as correctCount,
+            SUM(ls.incorrectAnswersCount) as incorrectCount
         FROM flashcards f
-        JOIN learning_statistics ls ON f.id = ls.flashcard_id
-        WHERE f.user_id = :userId
-        AND ls.last_updated BETWEEN :startDate AND :endDate
+        JOIN learningStatistics ls ON f.flashcardId = ls.flashcardId
+        WHERE f.userId = :userId
+        AND ls.lastUpdated BETWEEN :startDate AND :endDate
     """)
     suspend fun getWeeklyStatistics(userId: Long, startDate: Date, endDate: Date): WeeklyStats
     
     // Statystyki użytkownika dla poszczególnych kategorii
     @Query("""
         SELECT 
-            f.category_id as categoryId,
+            f.categoryId as categoryId,
             c.name as categoryName,
-            COUNT(f.id) as flashcardCount,
-            SUM(CASE WHEN f.learning_status = 3 THEN 1 ELSE 0 END) as learnedCount,
-            SUM(ls.correct_answers_count) as correctAnswersCount,
-            SUM(ls.incorrect_answers_count) as incorrectAnswersCount
+            COUNT(f.flashcardId) as flashcardCount,
+            SUM(CASE WHEN f.learningStatus = 3 THEN 1 ELSE 0 END) as learnedCount,
+            SUM(ls.correctAnswersCount) as correctAnswersCount,
+            SUM(ls.incorrectAnswersCount) as incorrectAnswersCount
         FROM flashcards f
-        JOIN categories c ON f.category_id = c.id
-        LEFT JOIN learning_statistics ls ON f.id = ls.flashcard_id
-        WHERE f.user_id = :userId
-        GROUP BY f.category_id
+        JOIN categories c ON f.categoryId = c.categoryId
+        LEFT JOIN learningStatistics ls ON f.flashcardId = ls.flashcardId
+        WHERE f.userId = :userId
+        GROUP BY f.categoryId
         ORDER BY c.name ASC
     """)
     suspend fun getUserLearningStatisticsByCategory(userId: Long): List<CategoryLearningStatistics>
@@ -41,16 +41,16 @@ interface ReportDao {
     // Statystyki tygodniowe z podziałem na kategorie
     @Query("""
         SELECT 
-            c.id as categoryId,
+            c.categoryId as categoryId,
             c.name as categoryName,
-            SUM(ls.correct_answers_count) as correctCount,
-            SUM(ls.incorrect_answers_count) as incorrectCount
-        FROM learning_statistics ls
-        JOIN flashcards f ON ls.flashcard_id = f.id
-        JOIN categories c ON f.category_id = c.id
-        WHERE f.user_id = :userId
-        AND ls.last_updated BETWEEN :startDate AND :endDate
-        GROUP BY c.id
+            SUM(ls.correctAnswersCount) as correctCount,
+            SUM(ls.incorrectAnswersCount) as incorrectCount
+        FROM learningStatistics ls
+        JOIN flashcards f ON ls.flashcardId = f.flashcardId
+        JOIN categories c ON f.categoryId = c.categoryId
+        WHERE f.userId = :userId
+        AND ls.lastUpdated BETWEEN :startDate AND :endDate
+        GROUP BY c.categoryId
         ORDER BY c.name
     """)
     suspend fun getWeeklyStatisticsByCategory(
@@ -63,13 +63,13 @@ interface ReportDao {
     @Query("""
         SELECT 
             u.*, 
-            COUNT(f.id) as flashcard_count,
-            SUM(CASE WHEN f.is_public = 1 THEN 1 ELSE 0 END) as public_flashcards_count,
-            SUM(CASE WHEN f.original_flashcard_id IS NOT NULL THEN 1 ELSE 0 END) as copied_flashcards_count
+            COUNT(f.flashcardId) as flashcardCount,
+            SUM(CASE WHEN f.isPublic = 1 THEN 1 ELSE 0 END) as publicFlashcardsCount,
+            SUM(CASE WHEN f.originalFlashcardId IS NOT NULL THEN 1 ELSE 0 END) as copiedFlashcardsCount
         FROM users u
-        LEFT JOIN flashcards f ON u.id = f.user_id
-        WHERE u.id = :userId
-        GROUP BY u.id
+        LEFT JOIN flashcards f ON u.userId = f.userId
+        WHERE u.userId = :userId
+        GROUP BY u.userId
     """)
     suspend fun getUserStatistics(userId: Long): UserStatistics
     

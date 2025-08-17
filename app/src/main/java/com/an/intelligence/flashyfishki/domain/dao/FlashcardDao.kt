@@ -23,29 +23,29 @@ interface FlashcardDao {
     @Delete
     suspend fun deleteFlashcard(flashcard: Flashcard)
     
-    @Query("SELECT * FROM flashcards WHERE id = :flashcardId")
+    @Query("SELECT * FROM flashcards WHERE flashcardId = :flashcardId")
     suspend fun getFlashcardById(flashcardId: Long): Flashcard?
     
-    @Query("SELECT * FROM flashcards WHERE user_id = :userId ORDER BY created_at DESC")
+    @Query("SELECT * FROM flashcards WHERE userId = :userId ORDER BY createdAt DESC")
     fun getUserFlashcards(userId: Long): Flow<List<Flashcard>>
     
-    @Query("SELECT * FROM flashcards WHERE user_id = :userId AND category_id = :categoryId ORDER BY created_at DESC")
+    @Query("SELECT * FROM flashcards WHERE userId = :userId AND categoryId = :categoryId ORDER BY createdAt DESC")
     fun getUserFlashcardsByCategory(userId: Long, categoryId: Long): Flow<List<Flashcard>>
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE user_id = :userId 
-        AND learning_status = :learningStatus 
-        ORDER BY next_review_date ASC, created_at DESC
+        WHERE userId = :userId 
+        AND learningStatus = :learningStatus 
+        ORDER BY nextReviewDate ASC, createdAt DESC
     """)
     fun getUserFlashcardsByLearningStatus(userId: Long, learningStatus: Int): Flow<List<Flashcard>>
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE user_id = :userId 
-        AND category_id = :categoryId 
-        AND learning_status = :learningStatus 
-        ORDER BY next_review_date ASC, created_at DESC
+        WHERE userId = :userId 
+        AND categoryId = :categoryId 
+        AND learningStatus = :learningStatus 
+        ORDER BY nextReviewDate ASC, createdAt DESC
     """)
     fun getUserFlashcardsByCategoryAndLearningStatus(
         userId: Long, 
@@ -55,20 +55,20 @@ interface FlashcardDao {
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE user_id = :userId 
-        AND next_review_date <= :currentDate 
-        AND learning_status < 3
-        ORDER BY learning_status DESC, next_review_date ASC
+        WHERE userId = :userId 
+        AND nextReviewDate <= :currentDate 
+        AND learningStatus < 3
+        ORDER BY learningStatus DESC, nextReviewDate ASC
     """)
     fun getFlashcardsForReview(userId: Long, currentDate: Date): Flow<List<Flashcard>>
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE user_id = :userId 
-        AND category_id = :categoryId 
-        AND next_review_date <= :currentDate 
-        AND learning_status < 3
-        ORDER BY learning_status DESC, next_review_date ASC
+        WHERE userId = :userId 
+        AND categoryId = :categoryId 
+        AND nextReviewDate <= :currentDate 
+        AND learningStatus < 3
+        ORDER BY learningStatus DESC, nextReviewDate ASC
     """)
     fun getFlashcardsForReviewByCategory(
         userId: Long, 
@@ -76,49 +76,49 @@ interface FlashcardDao {
         currentDate: Date
     ): Flow<List<Flashcard>>
     
-    @Query("SELECT * FROM flashcards WHERE is_public = 1 ORDER BY created_at DESC")
+    @Query("SELECT * FROM flashcards WHERE isPublic = 1 ORDER BY createdAt DESC")
     fun getPublicFlashcards(): Flow<List<Flashcard>>
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE is_public = 1 
-        AND category_id = :categoryId 
-        ORDER BY created_at DESC
+        WHERE isPublic = 1 
+        AND categoryId = :categoryId 
+        ORDER BY createdAt DESC
     """)
     fun getPublicFlashcardsByCategory(categoryId: Long): Flow<List<Flashcard>>
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE is_public = 1 
-        AND difficulty_level = :difficultyLevel 
-        ORDER BY created_at DESC
+        WHERE isPublic = 1 
+        AND difficultyLevel = :difficultyLevel 
+        ORDER BY createdAt DESC
     """)
     fun getPublicFlashcardsByDifficulty(difficultyLevel: Int): Flow<List<Flashcard>>
     
     @Query("""
         SELECT * FROM flashcards 
-        WHERE is_public = 1 
-        AND category_id = :categoryId 
-        AND difficulty_level = :difficultyLevel 
-        ORDER BY created_at DESC
+        WHERE isPublic = 1 
+        AND categoryId = :categoryId 
+        AND difficultyLevel = :difficultyLevel 
+        ORDER BY createdAt DESC
     """)
     fun getPublicFlashcardsByCategoryAndDifficulty(
         categoryId: Long, 
         difficultyLevel: Int
     ): Flow<List<Flashcard>>
     
-    @Query("SELECT COUNT(*) FROM flashcards WHERE user_id = :userId")
+    @Query("SELECT COUNT(*) FROM flashcards WHERE userId = :userId")
     suspend fun countUserFlashcards(userId: Long): Int
     
-    @Query("SELECT COUNT(*) FROM flashcards WHERE user_id = :userId AND learning_status = 3")
+    @Query("SELECT COUNT(*) FROM flashcards WHERE userId = :userId AND learningStatus = 3")
     suspend fun countLearnedFlashcards(userId: Long): Int
     
     @Query("""
         UPDATE flashcards 
-        SET learning_status = :newStatus,
-            next_review_date = :nextReviewDate,
-            updated_at = :updateTime
-        WHERE id = :flashcardId
+        SET learningStatus = :newStatus,
+            nextReviewDate = :nextReviewDate,
+            updatedAt = :updateTime
+        WHERE flashcardId = :flashcardId
     """)
     suspend fun updateFlashcardLearningStatus(
         flashcardId: Long, 
@@ -129,16 +129,16 @@ interface FlashcardDao {
     
     @Query("""
         UPDATE flashcards 
-        SET is_public = :isPublic,
-            updated_at = :updateTime
-        WHERE id = :flashcardId
+        SET isPublic = :isPublic,
+            updatedAt = :updateTime
+        WHERE flashcardId = :flashcardId
     """)
     suspend fun updateFlashcardPublicStatus(flashcardId: Long, isPublic: Boolean, updateTime: Date)
     
     @Query("""
         UPDATE flashcards 
-        SET copies_count = copies_count + 1
-        WHERE id = :originalFlashcardId
+        SET copiesCount = copiesCount + 1
+        WHERE flashcardId = :originalFlashcardId
     """)
     suspend fun incrementCopiesCount(originalFlashcardId: Long)
     
