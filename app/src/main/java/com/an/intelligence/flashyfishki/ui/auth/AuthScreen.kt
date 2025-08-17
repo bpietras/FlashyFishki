@@ -23,19 +23,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.an.intelligence.flashyfishki.domain.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthScreen(
-    onAuthSuccess: () -> Unit,
+    onAuthSuccess: (User) -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     
     // Navigate to main app when logged in
-    LaunchedEffect(uiState.isLoggedIn) {
-        if (uiState.isLoggedIn) {
-            onAuthSuccess()
+    LaunchedEffect(uiState.isLoggedIn, uiState.currentUser) {
+        if (uiState.isLoggedIn && uiState.currentUser != null) {
+            onAuthSuccess(uiState.currentUser!!)
         }
     }
     

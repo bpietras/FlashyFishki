@@ -269,3 +269,97 @@ Usunąłem funkcjonalność automatycznego logowania zgodnie z wymaganiami:
 - **Brak auto-login**: Nie ma automatycznego logowania po ponownym uruchomieniu
 
 Teraz aplikacja działa zgodnie z wymaganiami - brak automatycznego logowania, logout poprawnie pokazuje ekran logowania, a przy każdym uruchomieniu aplikacji użytkownik musi się zalogować.
+
+_________________________________________________________________________________________________
+
+na HomeScreen, zamiast napisu 'Profile' powinien być login użytkownika
+
+Zaktualizuję HomeScreen, aby wyświetlał login użytkownika zamiast ikony profilu. Najpierw muszę dodać sposób na przekazanie informacji o zalogowanym użytkowniku do HomeScreen.
+Ran tool
+Najpierw muszę przekazać informację o zalogowanym użytkowniku z AuthViewModel do HomeScreen. Zaktualizuję AuthScreen, aby przekazywało użytkownika:
+Ran tool
+Dodamę import dla User:
+Ran tool
+Ran tool
+Teraz zaktualizuję FlashyFishkiNavigation, aby przekazywało użytkownika do HomeScreen:
+Ran tool
+Ran tool
+Teraz zaktualizuję HomeScreen, aby przyjmował parametr currentUser i wyświetlał email użytkownika:
+Ran tool
+Ran tool
+Ran tool
+Sprawdzę czy są błędy w kodzie:
+Ran tool
+Ran tool
+## Podsumowanie zmian
+
+Zaktualizowałem HomeScreen, aby wyświetlał login (email) użytkownika zamiast ikony profilu:
+
+### Wykonane zmiany:
+
+1. **Zaktualizowano AuthScreen** ✅
+   - Zmieniono callback `onAuthSuccess` z `() -> Unit` na `(User) -> Unit`
+   - Dodano przekazywanie obiektu `User` po pomyślnym zalogowaniu
+   - Dodano import dla `User`
+
+2. **Zaktualizowano FlashyFishkiNavigation** ✅
+   - Dodano state `currentUser` do przechowywania informacji o zalogowanym użytkowniku
+   - Przekazywanie użytkownika z AuthScreen do HomeScreen
+   - Czyszczenie `currentUser` przy logout
+
+3. **Zaktualizowano HomeScreen** ✅
+   - Dodano parametr `currentUser: User?`
+   - Usunięto ikonę profilu (`Icons.Default.Person`)
+   - Dodano wyświetlanie emaila użytkownika w TopBar
+   - Stylizowano tekst z emailem (overflow handling, styling)
+
+### Rezultat:
+
+- **TopBar** teraz wyświetla:
+  - Tytuł "FlashyFishki" po lewej stronie
+  - Email zalogowanego użytkownika w środku/po prawej
+  - Ikonę logout po prawej stronie
+- **Email** jest wyświetlany z:
+  - Odpowiednim stylem (`MaterialTheme.typography.bodyMedium`)
+  - Kolorystyka (`MaterialTheme.colorScheme.onSurfaceVariant`)
+  - Obsługa overflow (`TextOverflow.Ellipsis`)
+  - Maksymalnie jedna linia
+
+Teraz użytkownik widzi swój email w górnym pasku aplikacji zamiast ikony profilu, co zapewnia lepszą identyfikację kto jest obecnie zalogowany.
+
+__________________________________________________________________________________________________________________________________
+
+czy w związku z powyższą zmianą wymagane są zmiany w testach?
+
+Sprawdzę istniejące testy i oceń czy wymagają aktualizacji po wprowadzonych zmianach.
+
+Analizując wprowadzone zmiany i istniejące testy:
+
+**Nie, zmiany w testach nie są wymagane** z następujących powodów:
+
+1. **AuthRepositoryTest** - pozostaje bez zmian, ponieważ:
+   - Zmiany dotyczyły tylko warstwy UI (AuthScreen, HomeScreen, Navigation)
+   - `AuthRepository` nie zmienił swojego API ani logiki biznesowej
+   - Testy `loginUser` i `registerUser` nadal są aktualne
+   - Usunięcie `SessionRepository` nie wpłynęło na testy, ponieważ już je zaktualizowaliśmy wcześniej
+
+2. **PasswordUtilsTest** - bez zmian, ponieważ:
+   - `PasswordUtils` nie został w ogóle dotknięty
+   - Testy hashowania i weryfikacji haseł pozostają aktualne
+
+3. **Brak testów UI**:
+   - Nie ma testów dla `AuthScreen`, `HomeScreen` czy nawigacji
+   - Wprowadzone zmiany dotyczyły tylko przekazywania `User` obiektu między komponentami UI
+   - Nie ma testów, które by weryfikowały wyświetlanie emaila w TopBar
+
+4. **Zmiany były tylko w warstwie prezentacji**:
+   - Zmiana sygnatury `onAuthSuccess: () -> Unit` na `onAuthSuccess: (User) -> Unit`
+   - Dodanie parametru `currentUser` do `HomeScreen`
+   - Wyświetlanie emaila w UI
+
+**Wniosek**: Istniejące testy jednostkowe dla warstwy domenowej (`AuthRepository`, `PasswordUtils`) pozostają w pełni aktualne i nie wymagają żadnych zmian. Zmiany dotyczyły wyłącznie warstwy prezentacji, dla której nie ma obecnie napisanych testów.
+
+Gdyby w przyszłości dodać testy UI (np. Compose UI tests), wówczas należałoby przetestować:
+- Czy email użytkownika jest wyświetlany w TopBar po zalogowaniu
+- Czy logout poprawnie czyści informacje o użytkowniku
+- Czy nawigacja między ekranami działa poprawnie
