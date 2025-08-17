@@ -1,0 +1,77 @@
+CLAUDE SONNET 3.7
+
+Jesteś developerem specjalizującym się w pisaniu aplikacji na Androida z użycien baz danych SQLite i frameworku Room, którego zadaniem jest stworzenie obsługi schematu bazy danych SQLite na podstawie informacji dostarczonych z sesji planowania, dokumentu wymagań produktu (PRD) i stacku technologicznym.
+Twoim celem jest napisanie klas DAO obsługujących logikę pracy z danymi w bazie, implementującymi zaplanowane funkcjonalności.
+
+Uwzględnij poniżesze dokumenty:
+
+1. <prd>
+@.ai/prd.md
+</prd>
+
+Jest to dokument wymagań produktu, który określa cechy, funkcjonalności i wymagania projektu.
+
+2. <tech_stack>
+@.ai/tech-stack.md
+</tech_stack>
+
+Opisuje stack technologiczny, który zostanie wykorzystany w projekcie, co może wpłynąć na decyzje dotyczące projektu bazy danych.
+
+3. <db-schema>
+@.ai/db-plan.md
+<db-schema>
+
+Zawiera szczegółówe dane o tabelach:
+1. Lista tabel z ich kolumnami, typami danych i ograniczeniami
+2. Relacje między tabelami
+3. Indeksy
+4. Zasady SQLite (jeśli dotyczy)
+5. Wszelkie dodatkowe uwagi lub wyjaśnienia dotyczące decyzji projektowych
+
+Uwzględnij już wygenerowane klasy encji znajdujące się w paczce: com.an.intelligence.flashyfishki.domain.model
+
+Wykonaj następującę kroki:
+1. Przeanalizuj schemat bazy danych:
+   - Zidentyfikuj główne encje (tabele)
+   - Zanotuj relacje między jednostkami
+   - Rozważ wszelkie indeksy, które mogą mieć wpływ na projekt DAO
+   - Zwróć uwagę na warunki walidacji określone w schemacie.
+
+2. Przeanalizuj PRD:
+   - Zidentyfikuj kluczowe cechy i funkcjonalności
+   - Zwróć uwagę na konkretne wymagania dotyczące operacji na danych (pobieranie, tworzenie, aktualizacja, usuwanie)
+   - Zidentyfikuj wymagania logiki biznesowej, które wykraczają poza operacje CRUD
+
+3. Rozważ stack technologiczny:
+   - Rozważ, w jaki sposób te technologie mogą wpłynąć na projekt DAO
+
+4. Wygeneruj klasy DAO w paczce: com.an.intelligence.flashyfishki.domain.dao
+
+Upewnij się, że wygenerowane klasy DAO obsługują wszystkie możliwe interakcje z bazą danych na podstawie zaplanowanych funkcjonalności.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+Stworzyłem wszystkie klasy DAO (Data Access Object) obsługujące logikę pracy z bazą danych Room zgodnie z wymaganiami. Oto podsumowanie zaimplementowanych funkcjonalności:
+UserDao:
+Podstawowe operacje CRUD dla użytkowników
+Metody do aktualizacji statystyk użytkownika (logowanie, liczba przeglądanych fiszek, odpowiedzi)
+Generowanie statystyk dotyczących konta użytkownika i jego aktywności
+CategoryDao:
+Zarządzanie kategoriami fiszek
+Bezpieczne usuwanie kategorii (tylko jeśli nie ma przypisanych fiszek)
+Widoki statystyk liczby fiszek w kategoriach
+Metody do analizy statusu nauki w poszczególnych kategoriach
+FlashcardDao:
+Pełne zarządzanie fiszkami (tworzenie, edycja, usuwanie)
+Zaawansowane filtry wyszukiwania (po użytkowniku, kategorii, statusie nauki)
+Pobieranie fiszek do powtórek według algorytmu 3-5-7
+Obsługa publicznej biblioteki fiszek
+Kopiowanie fiszek z biblioteki publicznej
+Generowanie statystyk nauki i raportów
+LearningStatisticsDao:
+Śledzenie postępów nauki dla każdej fiszki
+Rejestrowanie poprawnych i niepoprawnych odpowiedzi
+Generowanie cotygodniowych raportów statystycznych
+Analizy postępów w nauce z podziałem na kategorie
+Wszystkie DAO zostały zaprojektowane z myślą o wymaganiach określonych w PRD, takich jak algorytm powtórek 3-5-7, biblioteka publiczna fiszek, zarządzanie kategoriami i raportowanie.
+Klasa bazy danych FlashyFishkiDatabase została zaktualizowana, aby udostępniać wszystkie te DAO dla pozostałych komponentów aplikacji.

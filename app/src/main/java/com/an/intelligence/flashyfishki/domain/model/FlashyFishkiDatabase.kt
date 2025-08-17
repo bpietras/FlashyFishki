@@ -3,6 +3,10 @@ package com.an.intelligence.flashyfishki.domain.model
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.an.intelligence.flashyfishki.domain.dao.CategoryDao
+import com.an.intelligence.flashyfishki.domain.dao.FlashcardDao
+import com.an.intelligence.flashyfishki.domain.dao.LearningStatisticsDao
+import com.an.intelligence.flashyfishki.domain.dao.UserDao
 
 @Database(
     entities = [
@@ -16,5 +20,12 @@ import androidx.room.TypeConverters
 )
 @TypeConverters(Converters::class)
 abstract class FlashyFishkiDatabase : RoomDatabase() {
-    // DAOs będą dodane później
+    abstract fun userDao(): UserDao
+    abstract fun categoryDao(): CategoryDao
+    abstract fun flashcardDao(): FlashcardDao
+    abstract fun learningStatisticsDao(): LearningStatisticsDao
+
+    companion object {
+        const val DATABASE_NAME = "flash_fishki_database.db"
+    }
 }
