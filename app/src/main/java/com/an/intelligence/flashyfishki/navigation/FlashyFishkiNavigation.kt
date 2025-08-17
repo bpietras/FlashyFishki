@@ -46,9 +46,84 @@ fun FlashyFishkiNavigation(
             )
         }
         
+        // Flashcards module routes
+        composable<CategoriesRoute> {
+            com.an.intelligence.flashyfishki.ui.flashcards.CategoriesListScreen(
+                currentUser = currentUser!!,
+                onNavigateToCategory = { categoryId ->
+                    navController.navigate(FlashcardsRoute(categoryId))
+                },
+                onNavigateToNewFlashcard = {
+                    navController.navigate(FlashcardEditRoute())
+                }
+            )
+        }
+        
+        composable<FlashcardsRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<FlashcardsRoute>()
+            com.an.intelligence.flashyfishki.ui.flashcards.CategoryFlashcardsScreen(
+                categoryId = route.categoryId,
+                currentUser = currentUser!!,
+                onNavigateToFlashcard = { flashcardId ->
+                    navController.navigate(FlashcardDetailsRoute(flashcardId))
+                },
+                onNavigateToEdit = { flashcardId ->
+                    navController.navigate(FlashcardEditRoute(flashcardId = flashcardId))
+                },
+                onNavigateToExport = { categoryId ->
+                    navController.navigate(ExportRoute(categoryId))
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable<FlashcardDetailsRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<FlashcardDetailsRoute>()
+            com.an.intelligence.flashyfishki.ui.flashcards.FlashcardDetailsScreen(
+                flashcardId = route.flashcardId,
+                currentUser = currentUser!!,
+                onNavigateToEdit = { flashcardId ->
+                    navController.navigate(FlashcardEditRoute(flashcardId = flashcardId))
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable<FlashcardEditRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<FlashcardEditRoute>()
+            com.an.intelligence.flashyfishki.ui.flashcards.FlashcardEditScreen(
+                flashcardId = route.flashcardId,
+                categoryId = route.categoryId,
+                currentUser = currentUser!!,
+                onSaveSuccess = {
+                    navController.popBackStack()
+                },
+                onCancel = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable<ExportRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<ExportRoute>()
+            com.an.intelligence.flashyfishki.ui.flashcards.ExportScreen(
+                categoryId = route.categoryId,
+                currentUser = currentUser!!,
+                onExportComplete = { filePath ->
+                    // Show success message or handle file
+                    navController.popBackStack()
+                },
+                onCancel = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         // Future routes will be added here
-        // composable<CategoriesRoute> { ... }
-        // composable<FlashcardsRoute> { ... }
         // composable<LearningRoute> { ... }
         // composable<StatisticsRoute> { ... }
         // composable<ProfileRoute> { ... }

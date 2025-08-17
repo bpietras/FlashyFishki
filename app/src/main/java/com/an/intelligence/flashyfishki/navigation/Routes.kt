@@ -18,6 +18,18 @@ object CategoriesRoute
 data class FlashcardsRoute(val categoryId: Long)
 
 @Serializable
+data class FlashcardDetailsRoute(val flashcardId: Long)
+
+@Serializable
+data class FlashcardEditRoute(
+    val flashcardId: Long? = null,
+    val categoryId: Long? = null
+)
+
+@Serializable
+data class ExportRoute(val categoryId: Long)
+
+@Serializable
 data class LearningRoute(val categoryId: Long)
 
 @Serializable

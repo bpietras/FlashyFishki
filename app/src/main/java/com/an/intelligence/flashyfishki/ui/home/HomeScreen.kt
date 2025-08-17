@@ -53,9 +53,9 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* Navigate to add category */ }
+                onClick = { /* Navigate to categories list */ }
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Category")
+                Icon(Icons.Default.Add, contentDescription = "Manage Flashcards")
             }
         }
     ) { paddingValues ->
@@ -235,11 +235,11 @@ private fun EmptyCategoriesMessage() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { /* Navigate to add category */ }
+                onClick = { /* Navigate to categories list */ }
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Create Category")
+                Text("Start Learning")
             }
         }
     }
