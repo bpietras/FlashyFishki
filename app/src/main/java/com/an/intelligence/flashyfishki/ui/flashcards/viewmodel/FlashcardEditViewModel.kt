@@ -44,7 +44,7 @@ class FlashcardEditViewModel @Inject constructor(
     // Get current user ID from auth repository
     private val currentUserId: StateFlow<Long?> = authRepository.currentUser
         .map { it?.userId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // All categories for dropdown
     val categories = categoryDao.getAllCategories()
@@ -87,7 +87,7 @@ class FlashcardEditViewModel @Inject constructor(
                 }
 
                 // Check if user owns this flashcard
-                val userId = currentUserId.value
+                val userId = authRepository.currentUser.value?.userId
                 if (userId == null || flashcard.userId != userId) {
                     _error.value = "Access denied: You can only edit your own flashcards"
                     return@launch
@@ -197,7 +197,12 @@ class FlashcardEditViewModel @Inject constructor(
                 _error.value = null
 
                 val state = _formState.value
-                val userId = currentUserId.value
+                
+                // Wait for current user to be available
+                val userId = authRepository.currentUser.value?.userId
+                
+                // Debug log
+                android.util.Log.d("FlashcardEdit", "Current user ID: $userId, Auth user: ${authRepository.currentUser.value?.userId}")
 
                 if (userId == null) {
                     _error.value = "User not authenticated"

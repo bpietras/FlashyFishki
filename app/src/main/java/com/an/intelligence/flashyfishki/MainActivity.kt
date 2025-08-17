@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.an.intelligence.flashyfishki.domain.repository.AuthRepository
 import com.an.intelligence.flashyfishki.navigation.FlashyFishkiNavigation
 import com.an.intelligence.flashyfishki.ui.theme.FlashyFishkiTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,7 +34,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FlashyFishkiApp() {
-    FlashyFishkiNavigation()
+    val mainViewModel: MainViewModel = hiltViewModel()
+    FlashyFishkiNavigation(authRepository = mainViewModel.authRepository)
 }
 
 @Composable

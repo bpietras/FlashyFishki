@@ -39,7 +39,7 @@ class FlashcardDetailsViewModel @Inject constructor(
     // Get current user ID from auth repository
     private val currentUserId: StateFlow<Long?> = authRepository.currentUser
         .map { it?.userId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /**
      * Load flashcard details
@@ -57,7 +57,7 @@ class FlashcardDetailsViewModel @Inject constructor(
                 }
 
                 // Check if user owns this flashcard
-                val userId = currentUserId.value
+                val userId = authRepository.currentUser.value?.userId
                 if (userId == null || flashcard.userId != userId) {
                     _error.value = "Access denied: You can only view your own flashcards"
                     return@launch
@@ -104,7 +104,7 @@ class FlashcardDetailsViewModel @Inject constructor(
                 }
 
                 // Verify ownership again
-                val userId = currentUserId.value
+                val userId = authRepository.currentUser.value?.userId
                 if (userId == null || flashcard.userId != userId) {
                     _error.value = "Access denied: You can only delete your own flashcards"
                     return@launch
@@ -140,7 +140,7 @@ class FlashcardDetailsViewModel @Inject constructor(
                 }
 
                 // Verify ownership
-                val userId = currentUserId.value
+                val userId = authRepository.currentUser.value?.userId
                 if (userId == null || flashcard.userId != userId) {
                     _error.value = "Access denied: You can only modify your own flashcards"
                     return@launch

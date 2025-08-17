@@ -55,8 +55,12 @@ class AuthRepository @Inject constructor(
                 createdAt = Date()
             )
             
-            userDao.insertUser(newUser)
-            AuthResult.Success
+            val userId = userDao.insertUser(newUser)
+            if (userId > 0) {
+                AuthResult.Success
+            } else {
+                AuthResult.Error("Failed to create user")
+            }
             
         } catch (e: Exception) {
             AuthResult.Error("Registration failed: ${e.message}")
@@ -90,6 +94,11 @@ class AuthRepository @Inject constructor(
     
     suspend fun logout() {
         _currentUser.value = null
+    }
+    
+    // Initialize current user state (for cases where app state is restored)
+    fun setCurrentUser(user: User?) {
+        _currentUser.value = user
     }
     
     private fun isValidEmail(email: String): Boolean {

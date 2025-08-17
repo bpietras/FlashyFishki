@@ -30,7 +30,7 @@ class CategoriesViewModel @Inject constructor(
     // Get current user ID from auth repository
     private val currentUserId: StateFlow<Long?> = authRepository.currentUser
         .map { it?.userId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // Categories with learning statistics
     val categoriesWithStats = currentUserId
@@ -73,7 +73,7 @@ class CategoriesViewModel @Inject constructor(
                 _isLoading.value = true
                 _error.value = null
 
-                val userId = currentUserId.value
+                val userId = authRepository.currentUser.value?.userId
                 if (userId == null) {
                     _error.value = "User not authenticated"
                     return@launch

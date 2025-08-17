@@ -37,7 +37,7 @@ class CategoryFlashcardsViewModel @Inject constructor(
     // Get current user ID from auth repository
     private val currentUserId: StateFlow<Long?> = authRepository.currentUser
         .map { it?.userId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // Raw flashcards from database
     private val rawFlashcards = combine(

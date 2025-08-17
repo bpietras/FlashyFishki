@@ -11,16 +11,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.an.intelligence.flashyfishki.domain.model.User
+import com.an.intelligence.flashyfishki.domain.repository.AuthRepository
 import com.an.intelligence.flashyfishki.ui.auth.AuthScreen
 import com.an.intelligence.flashyfishki.ui.flashcards.CategoriesListScreen
 import com.an.intelligence.flashyfishki.ui.home.HomeScreen
+import javax.inject.Inject
 
 @Composable
 fun FlashyFishkiNavigation(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    authRepository: AuthRepository
 ) {
-    var currentUser by remember { mutableStateOf<User?>(null) }
+    val currentUser by authRepository.currentUser.collectAsStateWithLifecycle()
     
     NavHost(
         navController = navController,
@@ -29,7 +34,7 @@ fun FlashyFishkiNavigation(
         composable<AuthRoute> {
             AuthScreen(
                 onAuthSuccess = { user ->
-                    currentUser = user
+                    authRepository.setCurrentUser(user)
                     navController.navigate(HomeRoute) {
                         popUpTo(AuthRoute) { inclusive = true }
                     }
@@ -41,7 +46,7 @@ fun FlashyFishkiNavigation(
             HomeScreen(
                 currentUser = currentUser,
                 onNavigateToAuth = {
-                    currentUser = null
+                    authRepository.setCurrentUser(null)
                     navController.navigate(AuthRoute) {
                         popUpTo(HomeRoute) { inclusive = true }
                     }

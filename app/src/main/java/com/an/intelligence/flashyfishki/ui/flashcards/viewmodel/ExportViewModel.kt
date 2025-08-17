@@ -41,7 +41,7 @@ class ExportViewModel @Inject constructor(
     // Get current user ID from auth repository
     private val currentUserId: StateFlow<Long?> = authRepository.currentUser
         .map { it?.userId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /**
      * Load export data for category
@@ -51,7 +51,8 @@ class ExportViewModel @Inject constructor(
             try {
                 _error.value = null
 
-                val userId = currentUserId.value
+                // Wait for current user to be available
+                val userId = authRepository.currentUser.value?.userId
                 if (userId == null) {
                     _error.value = "User not authenticated"
                     return@launch
