@@ -34,3 +34,14 @@ data class LearningRoute(val categoryId: Long)
 
 @Serializable
 object StatisticsRoute
+
+@Serializable
+object StudySelectionRoute
+
+@Serializable
+data class StudyRoute(val categoryId: Long)
+
+@Serializable
+data class StudySummaryRoute(
+    val categoryId: Long
+)

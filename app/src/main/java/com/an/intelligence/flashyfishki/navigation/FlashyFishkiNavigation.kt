@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.an.intelligence.flashyfishki.domain.model.User
@@ -184,6 +185,54 @@ fun FlashyFishkiNavigation(
                 },
                 onCancel = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        // Study Module Routes
+        composable<StudySelectionRoute> {
+            com.an.intelligence.flashyfishki.ui.study.StudySelectionScreen(
+                currentUser = currentUser!!,
+                onNavigateToStudy = { categoryId ->
+                    navController.navigate(StudyRoute(categoryId))
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable<StudyRoute> { backStackEntry ->
+            val studyRoute = backStackEntry.toRoute<StudyRoute>()
+            com.an.intelligence.flashyfishki.ui.study.StudyScreen(
+                categoryId = studyRoute.categoryId,
+                currentUser = currentUser!!,
+                onNavigateToSummary = { categoryId ->
+                    navController.navigate(
+                        StudySummaryRoute(categoryId = categoryId)
+                    ) {
+                        popUpTo<StudyRoute> { inclusive = true }
+                    }
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable<StudySummaryRoute> { backStackEntry ->
+            val summaryRoute = backStackEntry.toRoute<StudySummaryRoute>()
+            com.an.intelligence.flashyfishki.ui.study.StudySummaryScreen(
+                categoryId = summaryRoute.categoryId,
+                onReturnToStudy = {
+                    navController.navigate(StudySelectionRoute) {
+                        popUpTo<StudySummaryRoute> { inclusive = true }
+                    }
+                },
+                onFinish = {
+                    navController.navigate(HomeRoute) {
+                        popUpTo<StudySummaryRoute> { inclusive = true }
+                    }
                 }
             )
         }
