@@ -102,7 +102,14 @@ class AuthRepository @Inject constructor(
     }
     
     private fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return try {
+            // Try to use Android's Patterns if available (production)
+            android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        } catch (e: Exception) {
+            // Fallback to regex for unit tests (JVM)
+            val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$".toRegex()
+            emailRegex.matches(email)
+        }
     }
     
     private fun isValidPassword(password: String): Boolean {

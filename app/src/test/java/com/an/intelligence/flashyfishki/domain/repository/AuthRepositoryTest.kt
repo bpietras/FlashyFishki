@@ -38,7 +38,7 @@ class AuthRepositoryTest {
             val result = authRepository.registerUser(email, password)
 
             // Then
-            assertTrue(result is AuthResult.Success)
+            assertTrue("Result should be AuthResult.Success but was $result", result is AuthResult.Success)
             coVerify { userDao.insertUser(any()) }
         }
     }
@@ -71,6 +71,9 @@ class AuthRepositoryTest {
         // Given
         val email = "invalid-email"
         val password = "password123"
+        
+        // Mock the getUserByEmail call that happens before validation
+        coEvery { userDao.getUserByEmail(email) } returns null
 
         // When
         val result = authRepository.registerUser(email, password)
@@ -86,13 +89,16 @@ class AuthRepositoryTest {
         // Given
         val email = "test@example.com"
         val password = "weak"
+        
+        // Mock the getUserByEmail call that happens before validation
+        coEvery { userDao.getUserByEmail(email) } returns null
 
         // When
         val result = authRepository.registerUser(email, password)
 
         // Then
         assertTrue(result is AuthResult.Error)
-        assertTrue((result as AuthResult.Error).message.contains("Password must be at least 8 characters"))
+        assertEquals("Password must be at least 8 characters long and contain at least one letter and one number", (result as AuthResult.Error).message)
         coVerify(exactly = 0) { userDao.insertUser(any()) }
     }
 

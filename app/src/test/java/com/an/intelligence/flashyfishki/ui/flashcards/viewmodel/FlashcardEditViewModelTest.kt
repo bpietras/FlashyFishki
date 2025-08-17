@@ -27,7 +27,7 @@ class FlashcardEditViewModelTest {
     private lateinit var categoryDao: CategoryDao
     private lateinit var authRepository: AuthRepository
     
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
     
     private val testUser = User(
         userId = 1L,
@@ -80,7 +80,6 @@ class FlashcardEditViewModelTest {
         
         // When
         viewModel.initializeForNewFlashcard(preselectedCategoryId)
-        testDispatcher.scheduler.advanceUntilIdle()
         
         // Then
         assertFalse(viewModel.isEditMode.value)
@@ -96,7 +95,6 @@ class FlashcardEditViewModelTest {
         
         // When
         viewModel.initializeForEditFlashcard(testFlashcard.flashcardId)
-        testDispatcher.scheduler.advanceUntilIdle()
         
         // Then
         assertTrue(viewModel.isEditMode.value)
@@ -116,7 +114,6 @@ class FlashcardEditViewModelTest {
         
         // When
         viewModel.initializeForEditFlashcard(nonExistentId)
-        testDispatcher.scheduler.advanceUntilIdle()
         
         // Then
         assertEquals("Flashcard not found", viewModel.error.value)
@@ -217,6 +214,7 @@ class FlashcardEditViewModelTest {
     fun `saveFlashcard should create new flashcard when not in edit mode`() = runTest {
         // Given
         viewModel.initializeForNewFlashcard()
+        
         viewModel.updateFormField(
             question = "Test Question",
             answer = "Test Answer",
@@ -230,7 +228,6 @@ class FlashcardEditViewModelTest {
         
         // When
         viewModel.saveFlashcard { successCallbackCalled = true }
-        testDispatcher.scheduler.advanceUntilIdle()
         
         // Then
         coVerify { flashcardDao.insertFlashcard(any()) }
@@ -241,6 +238,7 @@ class FlashcardEditViewModelTest {
     fun `saveFlashcard should fail when flashcard limit exceeded`() = runTest {
         // Given
         viewModel.initializeForNewFlashcard()
+        
         viewModel.updateFormField(
             question = "Test Question",
             answer = "Test Answer",
@@ -251,7 +249,6 @@ class FlashcardEditViewModelTest {
         
         // When
         viewModel.saveFlashcard {}
-        testDispatcher.scheduler.advanceUntilIdle()
         
         // Then
         assertEquals("You have reached the maximum limit of 1000 flashcards", viewModel.error.value)
