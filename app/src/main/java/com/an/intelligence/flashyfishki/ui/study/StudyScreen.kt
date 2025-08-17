@@ -15,6 +15,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.an.intelligence.flashyfishki.domain.model.User
 import com.an.intelligence.flashyfishki.ui.study.components.FlashcardStudyCard
 import com.an.intelligence.flashyfishki.ui.study.components.StudyControlsSection
+import com.an.intelligence.flashyfishki.ui.study.components.StudyCardSkeleton
+import com.an.intelligence.flashyfishki.ui.study.components.AnimatedProgressIndicator
+import com.an.intelligence.flashyfishki.ui.study.components.StudyToastManager
+import com.an.intelligence.flashyfishki.ui.study.components.rememberStudyToastState
 import com.an.intelligence.flashyfishki.ui.study.model.StudyAction
 import com.an.intelligence.flashyfishki.ui.study.model.StudySessionStats
 import com.an.intelligence.flashyfishki.ui.study.viewmodel.StudyViewModel
@@ -34,6 +38,8 @@ fun StudyScreen(
     val error by viewModel.error.collectAsStateWithLifecycle()
     val completedSessionStats by viewModel.completedSessionStats.collectAsStateWithLifecycle()
     
+    val toastState = rememberStudyToastState()
+    
     // Start study session when screen is first displayed
     LaunchedEffect(categoryId, currentUser.userId) {
         viewModel.startStudySession(categoryId, currentUser.userId)
@@ -43,7 +49,7 @@ fun StudyScreen(
     LaunchedEffect(completedSessionStats) {
         completedSessionStats?.let {
             onNavigateToSummary(categoryId)
-            viewModel.clearCompletedSessionStats()
+            // Don't clear immediately - let StudySummaryScreen handle it
         }
     }
     
@@ -83,13 +89,16 @@ fun StudyScreen(
         ) {
             when {
                 isLoading -> {
-                    LoadingState()
+                    LoadingStateWithSkeleton()
                 }
                 
                 error != null -> {
                     ErrorState(
                         error = error!!,
-                        onDismiss = { viewModel.clearError() },
+                        onDismiss = { 
+                            viewModel.clearError()
+                            toastState.showError("Session error resolved")
+                        },
                         onNavigateBack = onNavigateBack
                     )
                 }
@@ -97,14 +106,38 @@ fun StudyScreen(
                 sessionState != null -> {
                     StudySessionContent(
                         sessionState = sessionState!!,
-                        onShowAnswer = { viewModel.handleAction(StudyAction.ShowAnswer) },
-                        onCorrectAnswer = { viewModel.handleAction(StudyAction.CorrectAnswer) },
-                        onIncorrectAnswer = { viewModel.handleAction(StudyAction.IncorrectAnswer) },
-                        onEndSession = { viewModel.handleAction(StudyAction.EndSession) },
+                        onShowAnswer = { 
+                            viewModel.handleAction(StudyAction.ShowAnswer)
+                            toastState.showInfo("Review your answer", 1500L)
+                        },
+                        onCorrectAnswer = { 
+                            viewModel.handleAction(StudyAction.CorrectAnswer)
+                            toastState.showSuccess("Correct! ✓", 1500L)
+                        },
+                        onIncorrectAnswer = { 
+                            viewModel.handleAction(StudyAction.IncorrectAnswer)
+                            toastState.showError("Try again next time", 1500L)
+                        },
+                        onEndSession = { 
+                            viewModel.handleAction(StudyAction.EndSession)
+                            toastState.showInfo("Session ended")
+                        },
                         canEvaluate = viewModel.canEvaluateAnswer(),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
+            }
+            
+            // Toast overlay
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 80.dp)
+            ) {
+                StudyToastManager(
+                    toastMessage = toastState.currentToast.value,
+                    onDismiss = { toastState.dismiss() }
+                )
             }
         }
     }
@@ -127,6 +160,74 @@ private fun LoadingState(
                 text = "Preparing study session...",
                 style = MaterialTheme.typography.bodyLarge
             )
+        }
+    }
+}
+
+@Composable
+private fun LoadingStateWithSkeleton(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        // Progress skeleton
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(16.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                ) {}
+                Surface(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(16.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                ) {}
+            }
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp)
+            ) {}
+        }
+        
+        // Flashcard skeleton
+        StudyCardSkeleton(modifier = Modifier.weight(1f))
+        
+        // Controls skeleton
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+            ) {}
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+            ) {}
         }
     }
 }
@@ -217,7 +318,8 @@ private fun StudySessionContent(
         StudyProgressIndicator(
             progress = (sessionState.currentIndex + 1).toFloat() / sessionState.flashcards.size.toFloat(),
             currentCard = sessionState.currentIndex + 1,
-            totalCards = sessionState.flashcards.size
+            totalCards = sessionState.flashcards.size,
+            isComplete = sessionState.currentIndex >= sessionState.flashcards.size - 1
         )
         
         // Flashcard
@@ -243,6 +345,7 @@ private fun StudyProgressIndicator(
     progress: Float,
     currentCard: Int,
     totalCards: Int,
+    isComplete: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -266,13 +369,10 @@ private fun StudyProgressIndicator(
             )
         }
         
-        LinearProgressIndicator(
+        AnimatedProgressIndicator(
             progress = progress,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(6.dp),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            isComplete = isComplete,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

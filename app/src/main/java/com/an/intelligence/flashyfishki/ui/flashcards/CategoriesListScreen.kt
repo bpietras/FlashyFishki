@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,6 +38,7 @@ fun CategoriesListScreen(
     onNavigateToCategory: (Long) -> Unit,
     onNavigateToNewFlashcard: () -> Unit,
     onNavigateBack: () -> Unit,
+    onNavigateToStudy: () -> Unit = {},
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
     val categoriesWithStats by viewModel.categoriesWithStats.collectAsStateWithLifecycle()
@@ -63,6 +65,15 @@ fun CategoriesListScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToStudy) {
+                        Icon(
+                            Icons.Default.School, 
+                            contentDescription = "Start Study Session",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
             )

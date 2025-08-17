@@ -115,6 +115,8 @@ class StudyViewModel @Inject constructor(
                                      else currentState.sessionStats.incorrectAnswers
                 )
                 
+                println("DEBUG: Updated stats - completedCards: ${updatedStats.completedCards}, correct: ${updatedStats.correctAnswers}, incorrect: ${updatedStats.incorrectAnswers}")
+                
                 _sessionState.value = currentState.copy(
                     sessionStats = updatedStats
                 )

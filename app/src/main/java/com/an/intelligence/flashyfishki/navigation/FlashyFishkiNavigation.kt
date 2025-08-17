@@ -54,6 +54,9 @@ fun FlashyFishkiNavigation(
                 },
                 onNavigateToCategories = {
                     navController.navigate("categories")
+                },
+                onNavigateToStudy = {
+                    navController.navigate(StudySelectionRoute)
                 }
             )
         }
@@ -70,6 +73,9 @@ fun FlashyFishkiNavigation(
                 },
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onNavigateToStudy = {
+                    navController.navigate(StudySelectionRoute)
                 }
             )
         }
@@ -210,9 +216,8 @@ fun FlashyFishkiNavigation(
                 onNavigateToSummary = { categoryId ->
                     navController.navigate(
                         StudySummaryRoute(categoryId = categoryId)
-                    ) {
-                        popUpTo<StudyRoute> { inclusive = true }
-                    }
+                    )
+                    // Don't popUpTo StudyRoute - keep it in backstack for shared ViewModel
                 },
                 onNavigateBack = {
                     navController.popBackStack()
@@ -222,18 +227,27 @@ fun FlashyFishkiNavigation(
         
         composable<StudySummaryRoute> { backStackEntry ->
             val summaryRoute = backStackEntry.toRoute<StudySummaryRoute>()
+            
+            // Get StudyViewModel from the study nav graph to share data
+            val studyBackStackEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<StudyRoute>()
+            }
+            val sharedStudyViewModel: com.an.intelligence.flashyfishki.ui.study.viewmodel.StudyViewModel = 
+                hiltViewModel(studyBackStackEntry)
+            
             com.an.intelligence.flashyfishki.ui.study.StudySummaryScreen(
                 categoryId = summaryRoute.categoryId,
                 onReturnToStudy = {
                     navController.navigate(StudySelectionRoute) {
-                        popUpTo<StudySummaryRoute> { inclusive = true }
+                        popUpTo<StudyRoute> { inclusive = true }
                     }
                 },
                 onFinish = {
                     navController.navigate(HomeRoute) {
-                        popUpTo<StudySummaryRoute> { inclusive = true }
+                        popUpTo<StudyRoute> { inclusive = true }
                     }
-                }
+                },
+                studyViewModel = sharedStudyViewModel
             )
         }
 

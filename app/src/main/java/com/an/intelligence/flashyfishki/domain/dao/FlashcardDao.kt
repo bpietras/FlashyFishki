@@ -56,9 +56,9 @@ interface FlashcardDao {
     @Query("""
         SELECT * FROM flashcards 
         WHERE userId = :userId 
-        AND nextReviewDate <= :currentDate 
+        AND (nextReviewDate <= :currentDate OR nextReviewDate IS NULL)
         AND learningStatus < 3
-        ORDER BY learningStatus DESC, nextReviewDate ASC
+        ORDER BY learningStatus ASC, nextReviewDate ASC
     """)
     fun getFlashcardsForReview(userId: Long, currentDate: Date): Flow<List<Flashcard>>
     
@@ -66,9 +66,9 @@ interface FlashcardDao {
         SELECT * FROM flashcards 
         WHERE userId = :userId 
         AND categoryId = :categoryId 
-        AND nextReviewDate <= :currentDate 
+        AND (nextReviewDate <= :currentDate OR nextReviewDate IS NULL)
         AND learningStatus < 3
-        ORDER BY learningStatus DESC, nextReviewDate ASC
+        ORDER BY learningStatus ASC, nextReviewDate ASC
     """)
     fun getFlashcardsForReviewByCategory(
         userId: Long, 

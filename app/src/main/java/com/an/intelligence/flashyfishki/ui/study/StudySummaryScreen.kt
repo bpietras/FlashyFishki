@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.an.intelligence.flashyfishki.ui.study.components.StudyStatsCard
 import com.an.intelligence.flashyfishki.ui.study.model.StudySessionStats
 import com.an.intelligence.flashyfishki.ui.study.viewmodel.StudySummaryViewModel
@@ -29,7 +31,7 @@ fun StudySummaryScreen(
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
     summaryViewModel: StudySummaryViewModel = hiltViewModel(),
-    studyViewModel: StudyViewModel = hiltViewModel()
+    studyViewModel: StudyViewModel
 ) {
     val isLoading by summaryViewModel.isLoading.collectAsStateWithLifecycle()
     val error by summaryViewModel.error.collectAsStateWithLifecycle()
@@ -39,7 +41,10 @@ fun StudySummaryScreen(
     // Initialize ViewModel with session stats from StudyViewModel
     LaunchedEffect(completedSessionStats) {
         completedSessionStats?.let { stats ->
+            println("DEBUG: Received session stats - completedCards: ${stats.completedCards}, correctAnswers: ${stats.correctAnswers}, incorrectAnswers: ${stats.incorrectAnswers}")
             summaryViewModel.initializeWithSessionStats(stats)
+            // Clear the completed stats after successful initialization
+            studyViewModel.clearCompletedSessionStats()
         }
     }
     
@@ -71,7 +76,7 @@ fun StudySummaryScreen(
             val currentSessionStats = sessionStats
             if (currentSessionStats == null) {
                 EmptySessionState(onFinish = onFinish)
-            } else if (currentSessionStats.completedCards <= 0) {
+            } else if (currentSessionStats.completedCards == 0) {
                 EmptySessionState(onFinish = onFinish)
             } else {
                 StudySummaryContent(
