@@ -19,8 +19,7 @@ sealed class LoginResult {
 
 @Singleton
 class AuthRepository @Inject constructor(
-    private val userDao: UserDao,
-    private val sessionRepository: SessionRepository
+    private val userDao: UserDao
 ) {
     
     suspend fun registerUser(email: String, password: String): AuthResult {
@@ -72,9 +71,6 @@ class AuthRepository @Inject constructor(
             // Update last login date
             userDao.updateLastLoginDate(user.userId, Date())
             
-            // Save session
-            sessionRepository.saveSession(user.userId)
-            
             // Return updated user
             val updatedUser = userDao.getUserById(user.userId)
             LoginResult.Success(updatedUser ?: user)
@@ -85,11 +81,7 @@ class AuthRepository @Inject constructor(
     }
     
     suspend fun logout() {
-        sessionRepository.clearSession()
-    }
-    
-    suspend fun checkAutoLogin(): User? {
-        return sessionRepository.getCurrentUser()
+        // Session clearing is no longer needed as we don't persist sessions
     }
     
     private fun isValidEmail(email: String): Boolean {

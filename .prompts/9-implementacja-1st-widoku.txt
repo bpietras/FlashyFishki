@@ -224,3 +224,48 @@ Wykonaj następujące kroki, aby zaimplementować widok frontendu:
 W trakcie całego procesu implementacji należy ściśle przestrzegać dostarczonych zasad implementacji. Zasady te mają pierwszeństwo przed wszelkimi ogólnymi najlepszymi praktykami, które mogą być z nimi sprzeczne.
 
 Upewnij się, że twoja implementacja dokładnie odzwierciedla dostarczony plan implementacji i przestrzega wszystkich określonych zasad. Zwróć szczególną uwagę na strukturę komponentów, integrację API i obsługę interakcji użytkownika.
+
+
+_______________________________________________________________________________________________________________________________________
+
+
+there is a bug - when user wants to logout, they get automatically logged again which is incorrect behaviour; remove automatic login functionality:
+- when application starts it always ask user to log in
+- when application is closed, user is logged out
+- when user logs out, login screen is shown again and user is removed from session
+
+Rozumiem problem - auto-login powoduje nieskończoną pętlę. Usunę funkcjonalność automatycznego logowania zgodnie z wymaganiami.
+
+Usunąłem funkcjonalność automatycznego logowania zgodnie z wymaganiami:
+
+### Wykonane zmiany:
+
+1. **Usunięto auto-login** ✅
+   - Usunięto `checkAutoLogin()` z `AuthViewModel` (brak init block)
+   - Usunięto `NavigationViewModel` (już niepotrzebny)
+   - Usunięto `SessionRepository` (bez persistence sesji)
+   - Zaktualizowano `FlashyFishkiNavigation` do zawsze startowania z `AuthRoute`
+
+2. **Naprawiono flow logout** ✅
+   - `AuthRepository.logout()` już nie zapisuje/nie czyści sesji (brak persistence)
+   - Logout w `AuthViewModel` resetuje stan do początkowego `AuthUiState()`
+   - Navigation poprawnie przekierowuje z HomeScreen do AuthRoute
+
+3. **Zaktualizowano nawigację** ✅
+   - `FlashyFishkiNavigation` zawsze startuje z `AuthRoute`
+   - Usunięto loading state dla sprawdzania sesji
+   - Uproszczono strukturę nawigacji
+
+4. **Zaktualizowano testy** ✅
+   - Usunięto dependency na `SessionRepository` z testów
+   - Usunięto testy auto-login
+   - Zaktualizowano test logout
+
+### Nowe zachowanie aplikacji:
+
+- **Startup**: Aplikacja zawsze zaczyna od ekranu logowania
+- **Logout**: Użytkownik wraca do ekranu logowania, sesja nie jest zapisywana
+- **Zamknięcie aplikacji**: Przy ponownym uruchomieniu użytkownik musi się zalogować ponownie
+- **Brak auto-login**: Nie ma automatycznego logowania po ponownym uruchomieniu
+
+Teraz aplikacja działa zgodnie z wymaganiami - brak automatycznego logowania, logout poprawnie pokazuje ekran logowania, a przy każdym uruchomieniu aplikacji użytkownik musi się zalogować.

@@ -29,10 +29,6 @@ class AuthViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
     
-    init {
-        checkAutoLogin()
-    }
-    
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
@@ -98,20 +94,4 @@ class AuthViewModel @Inject constructor(
         }
     }
     
-    private fun checkAutoLogin() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            
-            val user = authRepository.checkAutoLogin()
-            if (user != null) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    isLoggedIn = true,
-                    currentUser = user
-                )
-            } else {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-            }
-        }
-    }
 }
