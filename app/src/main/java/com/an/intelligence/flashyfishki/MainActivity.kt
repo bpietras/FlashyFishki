@@ -11,9 +11,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.room.Room
+import com.an.intelligence.flashyfishki.domain.model.FlashyFishkiDatabase
 import com.an.intelligence.flashyfishki.ui.theme.FlashyFishkiTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
+    private val database by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            FlashyFishkiDatabase::class.java,
+            FlashyFishkiDatabase.DATABASE_NAME
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,6 +43,10 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            // A simple query that forces database creation
+            database.query("SELECT * FROM users", null)
         }
     }
 }
