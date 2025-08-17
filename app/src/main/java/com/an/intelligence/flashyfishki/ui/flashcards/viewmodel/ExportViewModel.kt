@@ -94,12 +94,18 @@ class ExportViewModel @Inject constructor(
                 val flashcards = _flashcards.value
 
                 if (category == null) {
-                    _error.value = "No category selected for export"
+                    _exportProgress.value = _exportProgress.value.copy(
+                        error = "No category selected for export",
+                        isExporting = false
+                    )
                     return@launch
                 }
 
                 if (flashcards.isEmpty()) {
-                    _error.value = "No flashcards to export"
+                    _exportProgress.value = _exportProgress.value.copy(
+                        error = "No flashcards to export",
+                        isExporting = false
+                    )
                     return@launch
                 }
 

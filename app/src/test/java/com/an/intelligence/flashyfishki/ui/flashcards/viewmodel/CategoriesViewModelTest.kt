@@ -8,6 +8,7 @@ import com.an.intelligence.flashyfishki.ui.flashcards.model.CategoryFormState
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -38,7 +39,7 @@ class CategoriesViewModelTest {
         authRepository = mockk()
         
         // Mock auth repository to return test user
-        every { authRepository.currentUser } returns flowOf(testUser)
+        every { authRepository.currentUser } returns MutableStateFlow(testUser)
         
         // Mock category DAO
         every { categoryDao.getUserCategoriesWithLearningStats(any()) } returns flowOf(emptyList())

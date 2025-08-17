@@ -200,9 +200,6 @@ class FlashcardEditViewModel @Inject constructor(
                 
                 // Wait for current user to be available
                 val userId = authRepository.currentUser.value?.userId
-                
-                // Debug log
-                android.util.Log.d("FlashcardEdit", "Current user ID: $userId, Auth user: ${authRepository.currentUser.value?.userId}")
 
                 if (userId == null) {
                     _error.value = "User not authenticated"
