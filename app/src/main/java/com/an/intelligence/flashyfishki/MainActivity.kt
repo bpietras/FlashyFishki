@@ -9,45 +9,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.room.Room
-import com.an.intelligence.flashyfishki.domain.model.FlashyFishkiDatabase
+import com.an.intelligence.flashyfishki.ui.auth.AuthScreen
 import com.an.intelligence.flashyfishki.ui.theme.FlashyFishkiTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val database by lazy {
-        Room.databaseBuilder(
-            applicationContext,
-            FlashyFishkiDatabase::class.java,
-            FlashyFishkiDatabase.DATABASE_NAME
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             FlashyFishkiTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                FlashyFishkiApp()
             }
         }
-        GlobalScope.launch(Dispatchers.IO) {
-            // A simple query that forces database creation
-            database.query("SELECT * FROM users", null)
+    }
+}
+
+@Composable
+fun FlashyFishkiApp() {
+    var isAuthenticated by remember { mutableStateOf(false) }
+    
+    if (isAuthenticated) {
+        // Main app content - placeholder for now
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            Greeting(
+                name = "FlashyFishki User",
+                modifier = Modifier.padding(innerPadding)
+            )
         }
+    } else {
+        AuthScreen(
+            onAuthSuccess = {
+                isAuthenticated = true
+            }
+        )
     }
 }
 
