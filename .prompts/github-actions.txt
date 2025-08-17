@@ -1,0 +1,31 @@
+CLAUDE SONNET 3.7
+
+Jesteś specjalistą GitHub Actions w stacku @.ai/tech-stack.md.
+
+Utwórz scenariusz budowania aplikacji przy każdym pushu do brancha master
+
+Nie buduj APK
+Testy nie powinny odpalać się jeśli wcześniejszy krok nie przejdzie
+Testy zbierają coverage
+
+___________________________________________________________________________________________________________
+
+Zmodyfikowałem pliki zgodnie z wymaganiami. Oto wprowadzone zmiany:
+
+1. **Testy uruchamiają się tylko gdy build się powiedzie:**
+   - Dodałem identyfikator `id: build` do kroku budowania
+   - Dodałem warunek `if: success() && steps.build.outcome == 'success'` do kroku testowego
+   - Dzięki temu testy uruchomią się tylko jeśli proces budowania zakończy się sukcesem
+
+2. **Zbieranie raportów pokrycia kodu (code coverage):**
+   - Dodałem plugin Jacoco do `app/build.gradle.kts`
+   - Skonfigurowałem raportowanie w formacie XML i HTML
+   - Dodałem szczegółową konfigurację zadania `jacocoTestReport` w pliku Gradle
+   - W workflow GitHub Actions użyłem komendy `./gradlew test jacocoTestReport`
+   - Dodałem krok uploadowania raportu coverage jako artefakt
+
+Teraz workflow będzie:
+- Uruchamiał testy tylko gdy build się powiedzie
+- Generował raport pokrycia kodu i zapisywał go jako artefakt, który będzie można pobrać z interfejsu GitHub Actions
+
+Raport coverage będzie dostępny w katalogu `app/build/reports/jacoco/` i zawierał będzie informacje o pokryciu kodu testami w formatach XML i HTML.

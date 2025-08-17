@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("kapt")
     alias(libs.plugins.hiltAndroid)
+    id("jacoco")
 }
 
 android {
@@ -29,6 +30,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isTestCoverageEnabled = true
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -40,6 +44,44 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+    
+    val debugTree = fileTree(mapOf(
+        "dir" to "$buildDir/intermediates/classes/debug",
+        "excludes" to fileFilter
+    ))
+    
+    val mainSrc = "$projectDir/src/main/java"
+
+    sourceDirectories.setFrom(files(listOf(mainSrc)))
+    classDirectories.setFrom(files(listOf(debugTree)))
+    executionData.setFrom(fileTree(mapOf(
+        "dir" to project.buildDir,
+        "includes" to listOf("jacoco/testDebugUnitTest.exec")
+    )))
 }
 
 dependencies {
