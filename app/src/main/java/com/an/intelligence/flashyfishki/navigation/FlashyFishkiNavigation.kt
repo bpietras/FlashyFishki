@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.an.intelligence.flashyfishki.domain.model.User
 import com.an.intelligence.flashyfishki.ui.auth.AuthScreen
+import com.an.intelligence.flashyfishki.ui.flashcards.CategoriesListScreen
 import com.an.intelligence.flashyfishki.ui.home.HomeScreen
 
 @Composable
@@ -53,7 +54,7 @@ fun FlashyFishkiNavigation(
         
         // Flashcards module routes
         composable("categories") {
-            com.an.intelligence.flashyfishki.ui.flashcards.CategoriesListScreen(
+            CategoriesListScreen(
                 currentUser = currentUser!!,
                 onNavigateToCategory = { categoryId ->
                     navController.navigate("flashcards/$categoryId")

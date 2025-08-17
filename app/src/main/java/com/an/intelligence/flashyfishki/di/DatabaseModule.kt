@@ -8,6 +8,8 @@ import com.an.intelligence.flashyfishki.domain.dao.LearningStatisticsDao
 import com.an.intelligence.flashyfishki.domain.dao.ReportDao
 import com.an.intelligence.flashyfishki.domain.dao.UserDao
 import com.an.intelligence.flashyfishki.domain.model.FlashyFishkiDatabase
+import com.an.intelligence.flashyfishki.ui.flashcards.cache.FlashcardCache
+import com.an.intelligence.flashyfishki.ui.flashcards.cache.CachedFlashcardRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,5 +61,17 @@ object DatabaseModule {
     @Singleton
     fun provideReportDao(database: FlashyFishkiDatabase): ReportDao {
         return database.reportDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideFlashcardCache(): FlashcardCache {
+        return FlashcardCache()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideCachedFlashcardRepository(cache: FlashcardCache): CachedFlashcardRepository {
+        return CachedFlashcardRepository(cache)
     }
 }

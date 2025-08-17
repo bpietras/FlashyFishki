@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -21,11 +22,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.an.intelligence.flashyfishki.domain.dao.CategoryDao
 import com.an.intelligence.flashyfishki.domain.model.User
+import com.an.intelligence.flashyfishki.ui.flashcards.components.AnimatedCategoryCard
 import com.an.intelligence.flashyfishki.ui.flashcards.components.CreateCategoryDialog
 import com.an.intelligence.flashyfishki.ui.flashcards.model.LearningStatus
 import com.an.intelligence.flashyfishki.ui.flashcards.viewmodel.CategoriesViewModel
+import kotlinx.coroutines.delay
+import androidx.compose.foundation.ExperimentalFoundationApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesListScreen(
     currentUser: User,
@@ -135,10 +139,15 @@ fun CategoriesListScreen(
                         )
                     }
                 } else {
-                    items(categoriesWithStats) { categoryWithStats ->
-                        CategoryCard(
+                    itemsIndexed(categoriesWithStats) { index, categoryWithStats ->
+                        LaunchedEffect(index) {
+                            delay(index * 100L) // Stagger animations
+                        }
+                        
+                        AnimatedCategoryCard(
                             categoryWithStats = categoryWithStats,
-                            onClick = { onNavigateToCategory(categoryWithStats.categoryId) }
+                            onClick = { onNavigateToCategory(categoryWithStats.categoryId) },
+                            modifier = Modifier
                         )
                     }
                 }

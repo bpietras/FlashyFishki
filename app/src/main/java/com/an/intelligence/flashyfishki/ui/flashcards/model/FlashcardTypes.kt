@@ -1,6 +1,7 @@
 package com.an.intelligence.flashyfishki.ui.flashcards.model
 
 import androidx.compose.ui.graphics.Color
+import com.an.intelligence.flashyfishki.ui.flashcards.theme.FlashcardColors
 
 /**
  * State for flashcard form (create/edit)
@@ -67,10 +68,10 @@ data class ValidationResult(
  * Learning status enum with display properties
  */
 enum class LearningStatus(val value: Int, val displayName: String, val color: Color) {
-    NEW(0, "Nowe", Color.Gray),
-    FIRST_REPEAT(1, "Pierwsza powtórka", Color(0xFFFFEB3B)), // Yellow
-    SECOND_REPEAT(2, "Druga powtórka", Color(0xFF2196F3)), // Blue
-    LEARNED(3, "Nauczone", Color(0xFF4CAF50)); // Green
+    NEW(0, "Nowe", FlashcardColors.NewStatus),
+    FIRST_REPEAT(1, "Pierwsza powtórka", FlashcardColors.FirstRepeatStatus),
+    SECOND_REPEAT(2, "Druga powtórka", FlashcardColors.SecondRepeatStatus),
+    LEARNED(3, "Nauczone", FlashcardColors.LearnedStatus);
 
     companion object {
         fun fromValue(value: Int): LearningStatus {

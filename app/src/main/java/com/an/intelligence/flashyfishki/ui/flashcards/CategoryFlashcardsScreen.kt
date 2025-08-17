@@ -19,11 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.an.intelligence.flashyfishki.domain.model.User
+import com.an.intelligence.flashyfishki.ui.flashcards.components.AnimatedFlashcardCard
 import com.an.intelligence.flashyfishki.ui.flashcards.components.FlashcardCard
 import com.an.intelligence.flashyfishki.ui.flashcards.components.FlashcardFilterDialog
 import com.an.intelligence.flashyfishki.ui.flashcards.viewmodel.CategoryFlashcardsViewModel
+import androidx.compose.foundation.ExperimentalFoundationApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CategoryFlashcardsScreen(
     categoryId: Long,
@@ -188,9 +190,10 @@ fun CategoryFlashcardsScreen(
                     }
                 } else {
                     items(flashcards) { flashcard ->
-                        FlashcardCard(
+                        AnimatedFlashcardCard(
                             flashcard = flashcard,
-                            onClick = { onNavigateToFlashcard(flashcard.flashcardId) }
+                            onClick = { onNavigateToFlashcard(flashcard.flashcardId) },
+                            modifier = Modifier
                         )
                     }
                 }

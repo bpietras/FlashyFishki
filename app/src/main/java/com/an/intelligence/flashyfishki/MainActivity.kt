@@ -41,11 +41,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FlashyFishkiTheme {
-        Greeting("Android")
-    }
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    FlashyFishkiTheme {
+//        Greeting("Android")
+//    }
+//}
