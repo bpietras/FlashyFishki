@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.an.intelligence.flashyfishki.domain.dao.UserDao
 import com.an.intelligence.flashyfishki.domain.model.FlashyFishkiDatabase
+import com.an.intelligence.flashyfishki.domain.repository.SessionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +31,14 @@ object DatabaseModule {
     @Provides
     fun provideUserDao(database: FlashyFishkiDatabase): UserDao {
         return database.userDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideSessionRepository(
+        @ApplicationContext context: Context,
+        userDao: UserDao
+    ): SessionRepository {
+        return SessionRepository(context, userDao)
     }
 }
