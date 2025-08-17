@@ -56,13 +56,12 @@ interface CategoryDao {
     @Query("""
         SELECT c.*, 
                COUNT(f.flashcardId) as flashcardCount,
-               SUM(CASE WHEN f.learningStatus = 0 THEN 1 ELSE 0 END) as newCount,
-               SUM(CASE WHEN f.learningStatus = 1 THEN 1 ELSE 0 END) as firstRepeatCount,
-               SUM(CASE WHEN f.learningStatus = 2 THEN 1 ELSE 0 END) as secondRepeatCount,
-               SUM(CASE WHEN f.learningStatus = 3 THEN 1 ELSE 0 END) as learnedCount
+               COALESCE(SUM(CASE WHEN f.learningStatus = 0 THEN 1 ELSE 0 END), 0) as newCount,
+               COALESCE(SUM(CASE WHEN f.learningStatus = 1 THEN 1 ELSE 0 END), 0) as firstRepeatCount,
+               COALESCE(SUM(CASE WHEN f.learningStatus = 2 THEN 1 ELSE 0 END), 0) as secondRepeatCount,
+               COALESCE(SUM(CASE WHEN f.learningStatus = 3 THEN 1 ELSE 0 END), 0) as learnedCount
         FROM categories c
-        JOIN flashcards f ON c.categoryId = f.categoryId
-        WHERE f.userId = :userId
+        LEFT JOIN flashcards f ON c.categoryId = f.categoryId AND f.userId = :userId
         GROUP BY c.categoryId
         ORDER BY c.name ASC
     """)
