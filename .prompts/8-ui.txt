@@ -1,0 +1,586 @@
+CLAUDE SONNET 3.7
+
+Jesteś asystentem AI, którego zadaniem jest pomoc w zaplanowaniu architektury interfejsu użytkownika dla MVP (Minimum Viable Product) na podstawie dostarczonych informacji. Twoim celem jest wygenerowanie listy pytań i zaleceń, które zostaną wykorzystane w kolejnym promptowaniu do utworzenia szczegółowej architektury UI, map podróży użytkownika i struktury nawigacji.
+
+Prosimy o uważne zapoznanie się z poniższymi informacjami:
+
+<product_requirements>
+@.ai/prd.md
+</product_requirements>
+
+<tech_stack>
+@.ai/tech-stack.md
+</tech_stack>
+
+<domain_code>
+wszystkie klasy z paczki: com.an.intelligence.flashyfishki.domain
+</domain_code>
+
+Przeanalizuj dostarczone informacje, koncentrując się na aspektach istotnych dla projektowania interfejsu użytkownika. Rozważ następujące kwestie:
+
+1. Zidentyfikuj kluczowe widoki i ekrany na podstawie wymagań produktu i dostępnych method klas DAO
+2. Określ potencjalne przepływy użytkownika i nawigację między widokami, uwzględniając encje i DAO.
+3. Rozważ komponenty UI i wzorce interakcji, które mogą być konieczne do efektywnej komunikacji z bazą.
+4. Pomyśl o responsywności i dostępności interfejsu.
+5. Oceń wymagania bezpieczeństwa i uwierzytelniania w kontekście integracji z bazą.
+6. Rozważ wymagania bezpieczeństwa i uwierzytelniania w kontekście sesji użytkownika
+7. Rozważ wszelkie konkretne biblioteki UI lub frameworki, które mogą być korzystne dla projektu.
+8. Przeanalizuj, jak struktura bazy wpływa na projekt UI i przepływy danych w aplikacji.
+
+Na podstawie analizy wygeneruj listę pytań i zaleceń. Powinny one dotyczyć wszelkich niejasności, potencjalnych problemów lub obszarów, w których potrzeba więcej informacji, aby stworzyć efektywną architekturę UI. Rozważ pytania dotyczące:
+
+1. Hierarchia i organizacja widoków w odniesieniu do struktury bazy
+2. Przepływy użytkownika i nawigacja wspierane przez dostępne DAO
+3. Responsywność i adaptacja do różnych urządzeń
+4. Dostępność i inkluzywność
+5. Bezpieczeństwo i autoryzacja na poziomie UI w powiązaniu z logowaniem użytkownika
+6. Spójność designu i doświadczenia użytkownika
+7. Strategia zarządzania stanem aplikacji i synchronizacji z bazą
+8. Obsługa stanów błędów i wyjątków zwracanych przez bazę
+9. Strategie buforowania i optymalizacji wydajności w komunikacji z bazą
+
+Dane wyjściowe powinny mieć następującą strukturę:
+
+<ui_architecture_planning_output>
+<pytania>
+[Wymień tutaj swoje pytania, ponumerowane]
+</pytania>
+
+<rekomendacje>
+[Wymień tutaj swoje zalecenia, ponumerowane]
+</rekomendacje>
+</ui_architecture_planning_output>
+
+Pamiętaj, że Twoim celem jest dostarczenie kompleksowej listy pytań i zaleceń, które pomogą w stworzeniu solidnej architektury UI dla MVP, w pełni zintegrowanej z dostępnymi metodami klas DAO. Skoncentruj się na jasności, trafności i dokładności swoich wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.
+
+Kontynuuj ten proces, generując nowe pytania i rekomendacje w oparciu o przekazany kontekst i odpowiedzi użytkownika, dopóki użytkownik wyraźnie nie poprosi o podsumowanie.
+
+Pamiętaj, aby skupić się na jasności, trafności i dokładności wyników. Nie dołączaj żadnych dodatkowych komentarzy ani wyjaśnień poza określonym formatem wyjściowym.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Muszę zapoznać się z dostarczonym materiałem, aby przygotować odpowiednią analizę architektury UI. Zacznę od sprawdzenia plików z wymaganiami produktu i technologią.
+Ran tool
+Read file: .ai/prd.md
+Ran tool
+<no message>
+Read file: .ai/tech-stack.md
+<no message>
+Search files...
+<no message>
+Read file: app/src/main/java/com/an/intelligence/flashyfishki/domain/dao/FlashcardDao.kt
+<no message>
+Read file: app/src/main/java/com/an/intelligence/flashyfishki/domain/dao/CategoryDao.kt
+<no message>
+Read file: app/src/main/java/com/an/intelligence/flashyfishki/domain/dao/UserDao.kt
+<no message>
+Read file: app/src/main/java/com/an/intelligence/flashyfishki/domain/dao/LearningStatisticsDao.kt
+<no message>
+Read file: app/src/main/java/com/an/intelligence/flashyfishki/domain/dao/ReportDao.kt
+<no message>
+Read file: app/src/main/java/com/an/intelligence/flashyfishki/domain/model/LearningStatistics.kt
+<ui_architecture_planning_output>
+<pytania>
+1. Jaka powinna być hierarchia ekranów aplikacji? Czy powinniśmy podzielić aplikację na moduły odpowiadające głównym funkcjonalnościom (np. zarządzanie fiszkami, nauka, biblioteka publiczna, statystyki)?
+2. Jakie konkretne ekrany/widoki należy utworzyć w każdym z modułów? Jak powinny być one ze sobą połączone?
+3. Jak szczegółowo powinniśmy implementować algorytm powtórek 3-5-7 na poziomie UI? Czy potrzebujemy osobnego ekranu z podsumowaniem sesji nauki?
+4. Jak prezentować fiszki podczas nauki? Czy powinniśmy używać animacji przejść między pytaniem i odpowiedzią?
+5. Jak zorganizować nawigację między widokami publicznej biblioteki fiszek a własnymi fiszkami użytkownika?
+6. Jak najlepiej prezentować dane statystyczne z raportów (wykresy, tabele, liczniki)?
+7. Czy potrzebujemy osobnego ekranu dla zarządzania kategoriami, czy może lepiej zintegrować to z ekranem zarządzania fiszkami?
+8. Jak obsługiwać statusy fiszek (0-3) na poziomie interfejsu? Czy powinny być oznaczone kolorami/ikonami?
+9. Jak zaprojektować interfejs do oceny poprawności odpowiedzi (dobrze/źle) podczas nauki?
+10. Jakie filtry i opcje sortowania powinny być dostępne w widoku publicznej biblioteki fiszek?
+11. Jak prezentować użytkownikowi informację o limicie 1000 fiszek i aktualnym wykorzystaniu?
+12. Jakie informacje powinny być widoczne na ekranie głównym aplikacji po zalogowaniu?
+</pytania>
+
+<rekomendacje>
+1. Zastosuj architekturę nawigacji opartą o Navigation Compose z podziałem na 5 głównych sekcji: Profil, Moje Fiszki, Nauka, Biblioteka Publiczna i Raporty.
+2. Używaj Bottom Navigation Bar jako głównego elementu nawigacji między głównymi sekcjami aplikacji.
+3. Zaimplementuj ekran logowania i rejestracji jako osobny graf nawigacji, aby zapewnić bezpieczną autentykację przed dostępem do głównych funkcji.
+4. Projektując ekrany nauki, zastosuj przewijalne karty (swipeable cards) do prezentacji pytań i odpowiedzi, z animacjami obrotu karty do pokazywania odpowiedzi.
+5. Wykorzystaj system kolorów do oznaczania statusów nauki fiszek: nowe (szary), pierwsza powtórka (niebieski), druga powtórka (pomarańczowy), nauczone (zielony).
+6. Dla publicznej biblioteki fiszek zaimplementuj filtrowanie przez komponenty Chip/FilterChip z możliwością łatwego wyboru kategorii i poziomu trudności.
+7. Zaprojektuj ekran tworzenia/edycji fiszki z walidacją długości tekstu (do 500 znaków dla pytania i 1000 dla odpowiedzi).
+8. Wyświetlaj cotygodniowe statystyki w formie wykresów słupkowych i kołowych, z możliwością przełączania między różnymi kategoriami.
+9. Zastosuj komponent ModalBottomSheet do szybkiego dostępu do opcji filtrowania i sortowania w bibliotece publicznej i widoku własnych fiszek.
+10. Zaimplementuj system powiadomień w aplikacji, informujący użytkownika o fiszkach oczekujących na powtórkę danego dnia.
+11. Stwórz ekran szczegółów kategorii pokazujący podział fiszek na statusy nauki z możliwością filtrowania tylko według wybranego statusu.
+12. Stosuj komponenty Material 3, takie jak Cards, Chips i ExtendedFloatingActionButton, dla spójnego i nowoczesnego wyglądu interfejsu.
+13. Zaimplementuj LazyColumn z wirtualizacją dla list fiszek, kategorii i wyników wyszukiwania, aby zapewnić płynne przewijanie nawet przy dużej liczbie elementów.
+14. Użyj animacji do podkreślenia interakcji użytkownika, szczególnie podczas przejść między pytaniem a odpowiedzią oraz podczas oznaczania odpowiedzi jako poprawnej/niepoprawnej.
+15. Zaprojektuj ekran podsumowania sesji nauki pokazujący liczbę przejrzanych fiszek, poprawne/błędne odpowiedzi i sugerowaną datę następnej sesji.
+16. Stosuj komponenty Scaffold z TopAppBar dla każdego ekranu z odpowiednimi akcjami w zależności od kontekstu (dodawanie, wyszukiwanie, filtrowanie).
+17. Użyj komponentu ProgressIndicator do wizualizacji postępu nauki w kategoriach oraz ogólnego postępu użytkownika.
+18. Zaimplementuj mechanizm Drag and Drop dla organizowania kolejności fiszek w ramach kategorii (jeśli jest to wymagane przez użytkownika).
+19. Zastosuj komponenty ExpansionPanel dla przedstawienia bardziej szczegółowych informacji o fiszkach w trybie listy, z możliwością rozwinięcia do pełnego widoku.
+20. Zapewnij tryb offline poprzez przechowywanie stanu aplikacji i synchronizację z bazą danych przy użyciu wzorca Repository i klasy ViewModel.
+</rekomendacje>
+</ui_architecture_planning_output>
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Tak, aplikacja powinna być podzielona na wymienione moduły, z ekranem logowania jako startowym widokiem
+2. Zdecyduj na podstawie dostępnych metod DAO
+3. Algorytm bazuje na learningStatus i nextReviewDate przypisanym do każdej fiszki. Przy każdej zmianie learning status, nextReviewDate jest updatowane automatycznie (z 0 na 1 - nextReviewDate jest zmieniane na obecna data +3 dni, z 1 na 2 - obecna data + 5 itd.). Można dodać ekran podsumowujący sesję nauki
+4. Tak, pokazuj najpierw pytanie a później odpowiedć i używaj animacji przejścia
+5. Na ekranie publicznej biblioteki użytkownik może wybrać fiszkę i skopiować ją do swoich kolekcji, jednak akcja te dzieje się w tle i nie wymaga przejścia od razu to widoku własnych fiszek użytkownika.
+6. W formie wykresów słupkowych i kołowych
+7. Zintegruj z ekraniem zarządzania fiszkami
+8. Mogą być oznaczone kolorami, np nowe (szary), pierwsza powtórka (żółty), druga powtórka (niebieski), nauczone (zielony)
+9. Użytkownik dokonuje samooceny więc wybiera pośród dwóch opcji: dobrze lub źle, następnie może przejść do następnej fiszki lub zakończyć naukę
+10. Filtrowanie po dziedzinie i trudności, sortowanie po dacie utworzenia fiszki
+11. Zliczając wpisywanie znaki, wyświetlać liczbę pozostałych znaków z 1000 w prawym dolnym rogu pola, uniemożliwić wpisanie więcej niż 1000
+12. Login użytkownika, menu umożliwiające wylogowanie, odnośniki do głównych modułów aplikacji (np. zarządzanie fiszkami, nauka, biblioteka publiczna, statystyki)
+
+W rekomendacjach zrezygnuj z:
+- systemu powiadomień w aplikacji, informujący użytkownika o fiszkach oczekujących na powtórkę danego dnia
+- komponentu ProgressIndicator do wizualizacji postępu nauki w kategoriach oraz ogólnego postępu użytkownika
+
+___________________________________________________________________________________________________________________________________________________________
+
+<ui_architecture_planning_output>
+<pytania>
+1. Jak szczegółowo powinniśmy zaprojektować ekran podsumowania sesji nauki? Jakie konkretne statystyki powinien zawierać?
+2. Czy widok tworzenia/edycji fiszki powinien być implementowany jako osobny ekran czy jako modalny dialog?
+3. Jak zorganizować ekran "Moje Fiszki" pod względem filtrowania i grupowania (np. po kategorii, statusie nauki)?
+4. Jak dokładnie powinien działać widok eksportu fiszek do formatu .md? Czy powinien być dostępny jako akcja na pojedynczej fiszce, czy raczej dla zaznaczonych fiszek?
+5. Jakie szczegółowe informacje powinny być widoczne dla każdej fiszki w widoku listy fiszek (poza pytaniem/odpowiedzią)?
+6. Jak projektować przejścia między różnymi filtrami w bibliotece publicznej? Czy powinny być to przejścia z pełnym przeładowaniem widoku, czy dynamiczna aktualizacja?
+7. Czy interfejs nauki powinien umożliwiać podgląd historii odpowiedzi dla danej fiszki?
+8. Jak obsługiwać przypadek braku fiszek do nauki w danej kategorii lub przy wybranym filtrze?
+9. Czy w widoku raportów powinniśmy umożliwiać wybór przedziału czasowego, czy zawsze pokazywać statystyki z ostatnich 7 dni?
+10. Jak powinna wyglądać nawigacja powrotna w aplikacji? Czy użytkownik powinien zawsze wracać do poprzedniego ekranu, czy czasem bezpośrednio do ekranu głównego?
+11. Jak projektować widok przywracania nauczonych fiszek (status 3) do powtórek? Czy powinien być osobny widok, czy może opcja dostępna w szczegółach fiszki?
+12. Jaką strategię obsługi błędów przyjąć w interfejsie użytkownika (np. niepowodzenie operacji na bazie danych)?
+</pytania>
+
+<rekomendacje>
+1. Zastosuj architekturę nawigacji opartą o Navigation Compose z podziałem na 5 głównych sekcji: Profil, Moje Fiszki, Nauka, Biblioteka Publiczna i Raporty.
+2. Używaj Bottom Navigation Bar jako głównego elementu nawigacji między głównymi sekcjami aplikacji.
+3. Zaimplementuj ekran logowania i rejestracji jako osobny graf nawigacji, aby zapewnić bezpieczną autentykację przed dostępem do głównych funkcji.
+4. Projektując ekrany nauki, zastosuj przewijalne karty (swipeable cards) do prezentacji pytań i odpowiedzi, z animacjami obrotu karty do pokazywania odpowiedzi.
+5. Wykorzystaj system kolorów do oznaczania statusów nauki fiszek: nowe (szary), pierwsza powtórka (żółty), druga powtórka (niebieski), nauczone (zielony).
+6. Dla publicznej biblioteki fiszek zaimplementuj filtrowanie przez komponenty Chip/FilterChip z możliwością łatwego wyboru kategorii i poziomu trudności.
+7. Zaprojektuj ekran tworzenia/edycji fiszki z walidacją długości tekstu (do 500 znaków dla pytania i 1000 dla odpowiedzi), z licznikiem pozostałych znaków w prawym dolnym rogu pola tekstowego.
+8. Wyświetlaj cotygodniowe statystyki w formie wykresów słupkowych i kołowych, z możliwością przełączania między różnymi kategoriami.
+9. Zastosuj komponent ModalBottomSheet do szybkiego dostępu do opcji filtrowania i sortowania w bibliotece publicznej i widoku własnych fiszek.
+10. Stwórz ekran szczegółów kategorii pokazujący podział fiszek na statusy nauki z możliwością filtrowania tylko według wybranego statusu.
+11. Stosuj komponenty Material 3, takie jak Cards, Chips i ExtendedFloatingActionButton, dla spójnego i nowoczesnego wyglądu interfejsu.
+12. Zaimplementuj LazyColumn z wirtualizacją dla list fiszek, kategorii i wyników wyszukiwania, aby zapewnić płynne przewijanie nawet przy dużej liczbie elementów.
+13. Użyj animacji do podkreślenia interakcji użytkownika, szczególnie podczas przejść między pytaniem a odpowiedzią oraz podczas oznaczania odpowiedzi jako poprawnej/niepoprawnej.
+14. Zaprojektuj ekran podsumowania sesji nauki pokazujący liczbę przejrzanych fiszek, poprawne/błędne odpowiedzi i sugerowaną datę następnej sesji.
+15. Stosuj komponenty Scaffold z TopAppBar dla każdego ekranu z odpowiednimi akcjami w zależności od kontekstu (dodawanie, wyszukiwanie, filtrowanie).
+16. Zaimplementuj mechanizm Drag and Drop dla organizowania kolejności fiszek w ramach kategorii (jeśli jest to wymagane przez użytkownika).
+17. Zastosuj komponenty ExpansionPanel dla przedstawienia bardziej szczegółowych informacji o fiszkach w trybie listy, z możliwością rozwinięcia do pełnego widoku.
+18. Zapewnij tryb offline poprzez przechowywanie stanu aplikacji i synchronizację z bazą danych przy użyciu wzorca Repository i klasy ViewModel.
+19. Zaimplementuj widok limitu 1000 fiszek poprzez wskaźnik w profilu użytkownika pokazujący aktualne wykorzystanie limitu.
+20. Dodaj ekran potwierdzenia dla krytycznych operacji, takich jak usuwanie fiszek lub kategorii, z jasnym opisem konsekwencji.
+</rekomendacje>
+</ui_architecture_planning_output>
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Ekran powinien pokazywać ile fiszek było przerobionych ogółem, na ile odpowiedziano dobrze a na ile źle
+2. Widoki tworzenia i edytowania fiszki powinny być maksymalnie podobne, zdecyduj
+3. Wyświetl najpierw kategorie a po kliknięciu na jedną, wyświetl listę fiszek w danej kategorii posortowanych wg daty utworzenia
+4. Można eksportować wszystkie fiszki z danej dziedziny
+5. Trudność
+6. Zdecyduj jakie podejście da najlepsze rezultaty w wydajności
+7. Nie
+8. Pusta lista, nie można rozpocząć sesji nauki tylko dodawać nowe fiszki
+9. Zawsze z ostatnich 7 dni
+10. Czasem do ekranu głównego
+11. Opcja dostępna w szczegółach fiszki
+12. Wyświetlenie błędu i powrót do poprzedniego widoku
+
+Jesteś asystentem AI, którego zadaniem jest podsumowanie rozmowy na temat planowania architektury UI dla MVP i przygotowanie zwięzłego podsumowania dla następnego etapu rozwoju. W historii konwersacji znajdziesz następujące informacje:
+1. Dokument wymagań produktu (PRD)
+2. Informacje o stacku technologicznym
+3. Klasy DAO
+4. Historia rozmów zawierająca pytania i odpowiedzi
+5. Zalecenia dotyczące architektury UI
+
+Twoim zadaniem jest:
+1. Podsumować historię konwersacji, koncentrując się na wszystkich decyzjach związanych z planowaniem architektury UI.
+2. Dopasować zalecenia modelu do odpowiedzi udzielonych w historii konwersacji. Zidentyfikować, które zalecenia są istotne w oparciu o dyskusję.
+3. Przygotować szczegółowe podsumowanie rozmowy, które obejmuje:
+   a. Główne wymagania dotyczące architektury UI
+   b. Kluczowe widoki, ekrany i przepływy użytkownika
+   c. Strategię integracji z bazą i zarządzania stanem
+   d. Kwestie dotyczące responsywności, dostępności i bezpieczeństwa
+   e. Wszelkie nierozwiązane kwestie lub obszary wymagające dalszego wyjaśnienia
+4. Sformatować wyniki w następujący sposób:
+
+<conversation_summary>
+<decisions>
+[Wymień decyzje podjęte przez użytkownika, ponumerowane].
+</decisions>
+<matched_recommendations>
+[Lista najistotniejszych zaleceń dopasowanych do rozmowy, ponumerowanych]
+</matched_recommendations>
+<ui_architecture_planning_summary>
+[Podaj szczegółowe podsumowanie rozmowy, w tym elementy wymienione w kroku 3].
+</ui_architecture_planning_summary>
+<unresolved_issues>
+[Wymień wszelkie nierozwiązane kwestie lub obszary wymagające dalszych wyjaśnień, jeśli takie istnieją]
+</unresolved_issues>
+</conversation_summary>
+
+Końcowy wynik powinien zawierać tylko treść w formacie markdown. Upewnij się, że Twoje podsumowanie jest jasne, zwięzłe i zapewnia cenne informacje dla następnego etapu planowania architektury UI i integracji z bazą.
+
+__________________________________________________________________________________________________________________________________________
+
+<conversation_summary>
+<decisions>
+1. Aplikacja będzie podzielona na 5 głównych modułów: Profil, Moje Fiszki, Nauka, Biblioteka Publiczna i Raporty.
+2. Ekran logowania będzie startowym widokiem aplikacji.
+3. Algorytm nauki 3-5-7 bazuje na learningStatus i nextReviewDate przypisanym do każdej fiszki.
+4. Podczas nauki najpierw pokazywane jest pytanie, potem odpowiedź z animacją przejścia.
+5. Użytkownik może kopiować fiszki z biblioteki publicznej do swojej kolekcji bez zmiany widoku.
+6. Statystyki będą prezentowane w formie wykresów słupkowych i kołowych.
+7. Zarządzanie kategoriami będzie zintegrowane z ekranem zarządzania fiszkami.
+8. Statusy fiszek będą oznaczone kolorami: nowe (szary), pierwsza powtórka (żółty), druga powtórka (niebieski), nauczone (zielony).
+9. Ocena poprawności odpowiedzi poprzez wybór "dobrze" lub "źle".
+10. Biblioteka publiczna z filtrowaniem po dziedzinie i trudności oraz sortowaniem po dacie utworzenia.
+11. Licznik pozostałych znaków będzie widoczny w prawym dolnym rogu pola tekstowego.
+12. Ekran główny będzie zawierał login użytkownika, menu do wylogowania i odnośniki do głównych modułów.
+13. Ekran podsumowania sesji nauki pokazujący liczbę przerobionych fiszek oraz statystyki poprawnych i błędnych odpowiedzi.
+14. Widoki tworzenia i edycji fiszki będą maksymalnie podobne.
+15. "Moje Fiszki" najpierw wyświetlą kategorie, a po kliknięciu listę fiszek w danej kategorii posortowanych wg daty utworzenia.
+16. Możliwość eksportu wszystkich fiszek z danej dziedziny do formatu .md.
+17. Dla pustej listy fiszek nie można rozpocząć sesji nauki.
+18. Raporty zawsze pokazują dane z ostatnich 7 dni.
+19. Przywracanie nauczonych fiszek będzie dostępne w szczegółach fiszki.
+20. W przypadku błędów aplikacja wyświetli komunikat i wróci do poprzedniego widoku.
+</decisions>
+
+<matched_recommendations>
+1. Architektura nawigacji oparta o Navigation Compose z podziałem na 5 głównych sekcji.
+2. Bottom Navigation Bar jako główny element nawigacji między głównymi sekcjami aplikacji.
+3. Ekran logowania i rejestracji jako osobny graf nawigacji.
+4. Przewijalne karty (swipeable cards) z animacjami obrotu karty do pokazywania odpowiedzi.
+5. System kolorów do oznaczania statusów nauki fiszek.
+6. Komponenty Chip/FilterChip do filtrowania w bibliotece publicznej.
+7. Ekran tworzenia/edycji fiszki z walidacją długości tekstu i licznikiem pozostałych znaków.
+8. Wykresy słupkowe i kołowe dla cotygodniowych statystyk.
+9. LazyColumn z wirtualizacją dla list fiszek, kategorii i wyników wyszukiwania.
+10. Animacje do podkreślenia interakcji użytkownika, szczególnie przy przejściach pytanie-odpowiedź.
+11. Ekran podsumowania sesji nauki z liczbą przejrzanych fiszek i statystykami odpowiedzi.
+12. Scaffold z TopAppBar dla każdego ekranu z odpowiednimi akcjami kontekstowymi.
+13. Komponenty ExpansionPanel dla przedstawienia szczegółowych informacji o fiszkach.
+14. Przechowywanie stanu aplikacji i synchronizacja z bazą przy użyciu wzorca Repository i klasy ViewModel.
+15. Ekran potwierdzenia dla krytycznych operacji, takich jak usuwanie fiszek lub kategorii.
+</matched_recommendations>
+
+<ui_architecture_planning_summary>
+## Architektura UI dla aplikacji FlashyFishki
+
+### Główne założenia
+Aplikacja FlashyFishki to narzędzie edukacyjne wykorzystujące fiszki i algorytm powtórek 3-5-7 do efektywnej nauki. Interfejs użytkownika został zaprojektowany w oparciu o Jetpack Compose, wykorzystując Material 3 Design dla spójnego i nowoczesnego wyglądu.
+
+### Struktura nawigacji
+Aplikacja podzielona jest na dwa główne grafy nawigacyjne:
+1. **Graf autentykacji** - zawierający ekrany logowania i rejestracji
+2. **Graf główny** - zawierający 5 głównych sekcji dostępnych po zalogowaniu:
+   - Profil użytkownika
+   - Moje Fiszki
+   - Nauka
+   - Biblioteka Publiczna
+   - Raporty
+
+Nawigacja między głównymi sekcjami realizowana jest przez Bottom Navigation Bar, zapewniając łatwy dostęp do kluczowych funkcji aplikacji.
+
+### Kluczowe widoki i ekrany
+
+#### Autentykacja
+- **Ekran logowania** - startowy widok aplikacji
+- **Ekran rejestracji** - formularz z walidacją adresu e-mail i siły hasła
+
+#### Profil użytkownika
+- Informacje o użytkowniku (e-mail, data ostatniego logowania)
+- Wskaźnik wykorzystania limitu 1000 fiszek
+- Opcja wylogowania
+- Dostęp do pozostałych sekcji aplikacji
+
+#### Moje Fiszki
+- **Lista kategorii** - wyświetla dostępne kategorie fiszek
+- **Lista fiszek w kategorii** - po wyborze kategorii, fiszki posortowane wg daty utworzenia
+- **Szczegóły fiszki** - pełny widok fiszki z opcją przywrócenia do nauki dla nauczonych fiszek
+- **Tworzenie/Edycja fiszki** - jednolity interfejs z walidacją długości tekstu (500 znaków dla pytania, 1000 dla odpowiedzi)
+- **Eksport fiszek** - możliwość eksportowania wszystkich fiszek z danej kategorii do formatu .md
+
+#### Nauka
+- **Wybór kategorii** - filtrowanie fiszek do nauki
+- **Ekran nauki** - przewijalne karty z animacją obrotu między pytaniem a odpowiedzią
+- **Ocena odpowiedzi** - przyciski "Dobrze"/"Źle" do samooceny
+- **Podsumowanie sesji** - statystyki przerobionych fiszek oraz poprawnych i błędnych odpowiedzi
+
+#### Biblioteka Publiczna
+- **Lista publicznych fiszek** - z możliwością filtrowania po dziedzinie i trudności
+- **Sortowanie** - po dacie utworzenia fiszki
+- **Kopiowanie fiszek** - możliwość dodania fiszki do własnej kolekcji bez zmiany widoku
+
+#### Raporty
+- **Statystyki tygodniowe** - wykresy słupkowe i kołowe dla danych z ostatnich 7 dni
+- **Podział na kategorie** - możliwość przełączania między różnymi kategoriami
+
+### Integracja z bazą danych
+- Wzorzec Repository zapewnia warstwę abstrakcji między UI a bazą danych Room
+- ViewModels zarządzają stanem aplikacji i komunikacją z repozytoriami
+- Flow z Kotlin Coroutines umożliwia reaktywne aktualizacje UI na podstawie zmian w bazie
+
+### Obsługa algorytmu nauki
+- Statusy fiszek (0-3) oznaczone kolorami dla łatwej identyfikacji etapu nauki
+- Automatyczne aktualizowanie nextReviewDate przy zmianie learningStatus
+- Filtry fiszek do nauki na podstawie learningStatus i nextReviewDate
+
+### Responsywność i wydajność
+- LazyColumn zapewnia efektywne wyświetlanie długich list fiszek i kategorii
+- Dynamiczne aktualizacje widoków przy filtrowaniu dla lepszej wydajności
+- Efektywne zarządzanie zasobami dzięki wirtualizacji komponentów listy
+
+### Dostępność
+- Jasne oznaczenia statusów nauki za pomocą kolorów
+- Informacyjne komunikaty w przypadku błędów
+- Czytelne formatowanie tekstów i odpowiednie kontrasty
+
+### Bezpieczeństwo
+- Wydzielony graf nawigacji dla autentykacji
+- Walidacja wprowadzanych danych
+- Potwierdzenia przed operacjami krytycznymi (usuwanie)
+
+### Strategie obsługi błędów
+- Wyświetlanie komunikatów o błędach
+- Automatyczny powrót do poprzedniego widoku po wystąpieniu błędu
+- Zabezpieczenia przed niepoprawnymi danymi wejściowymi
+</ui_architecture_planning_summary>
+
+<unresolved_issues>
+1. Dokładny sposób implementacji animacji przejścia między pytaniem a odpowiedzią w ekranie nauki.
+2. Szczegóły implementacji mechanizmu eksportu fiszek do formatu .md.
+3. Strategia buforowania danych dla trybu offline i synchronizacja po ponownym połączeniu.
+4. Dokładna struktura i layout dla ekranu podsumowania sesji nauki.
+5. Strategia przechowywania i odzyskiwania stanu aplikacji po jej zamknięciu.
+6. Szczegółowy sposób prezentacji danych statystycznych w wykresach.
+7. Strategia optymalizacji wydajności dla użytkowników z dużą liczbą fiszek zbliżającą się do limitu 1000.
+</unresolved_issues>
+</conversation_summary>
+
+
+___________________________________________________________________________________________________
+
+Jesteś wykwalifikowanym architektem frontend, którego zadaniem jest stworzenie kompleksowej architektury interfejsu użytkownika w oparciu o dokument wymagań produktu (PRD), schemat bazy i klasy DAO oraz notatki z sesji planowania. Twoim celem jest zaprojektowanie struktury interfejsu użytkownika, która skutecznie spełnia wymagania produktu, jest zgodna z możliwościami bazy i zawiera spostrzeżenia z sesji planowania.
+
+Najpierw dokładnie przejrzyj następujące dokumenty:
+
+Dokument wymagań produktu (PRD):
+<prd>
+@.ai/prd.md
+</prd>
+
+Tech stack:
+<tech_stack>
+@.ai/tech-stack.md
+</tech_stack>
+
+Schemat bazy i klasy DAO
+<domain_code>
+wszystkie klasy z paczki: com.an.intelligence.flashyfishki.domain
+</domain_code>
+
+Session Notes:
+<session_notes>
+<conversation_summary>
+<decisions>
+1. Aplikacja będzie podzielona na 5 głównych modułów: Profil, Moje Fiszki, Nauka, Biblioteka Publiczna i Raporty.
+2. Ekran logowania będzie startowym widokiem aplikacji.
+3. Algorytm nauki 3-5-7 bazuje na learningStatus i nextReviewDate przypisanym do każdej fiszki.
+4. Podczas nauki najpierw pokazywane jest pytanie, potem odpowiedź z animacją przejścia.
+5. Użytkownik może kopiować fiszki z biblioteki publicznej do swojej kolekcji bez zmiany widoku.
+6. Statystyki będą prezentowane w formie wykresów słupkowych i kołowych.
+7. Zarządzanie kategoriami będzie zintegrowane z ekranem zarządzania fiszkami.
+8. Statusy fiszek będą oznaczone kolorami: nowe (szary), pierwsza powtórka (żółty), druga powtórka (niebieski), nauczone (zielony).
+9. Ocena poprawności odpowiedzi poprzez wybór "dobrze" lub "źle".
+10. Biblioteka publiczna z filtrowaniem po dziedzinie i trudności oraz sortowaniem po dacie utworzenia.
+11. Licznik pozostałych znaków będzie widoczny w prawym dolnym rogu pola tekstowego.
+12. Ekran główny będzie zawierał login użytkownika, menu do wylogowania i odnośniki do głównych modułów.
+13. Ekran podsumowania sesji nauki pokazujący liczbę przerobionych fiszek oraz statystyki poprawnych i błędnych odpowiedzi.
+14. Widoki tworzenia i edycji fiszki będą maksymalnie podobne.
+15. "Moje Fiszki" najpierw wyświetlą kategorie, a po kliknięciu listę fiszek w danej kategorii posortowanych wg daty utworzenia.
+16. Możliwość eksportu wszystkich fiszek z danej dziedziny do formatu .md.
+17. Dla pustej listy fiszek nie można rozpocząć sesji nauki.
+18. Raporty zawsze pokazują dane z ostatnich 7 dni.
+19. Przywracanie nauczonych fiszek będzie dostępne w szczegółach fiszki.
+20. W przypadku błędów aplikacja wyświetli komunikat i wróci do poprzedniego widoku.
+</decisions>
+
+<matched_recommendations>
+1. Architektura nawigacji oparta o Navigation Compose z podziałem na 5 głównych sekcji.
+2. Bottom Navigation Bar jako główny element nawigacji między głównymi sekcjami aplikacji.
+3. Ekran logowania i rejestracji jako osobny graf nawigacji.
+4. Przewijalne karty (swipeable cards) z animacjami obrotu karty do pokazywania odpowiedzi.
+5. System kolorów do oznaczania statusów nauki fiszek.
+6. Komponenty Chip/FilterChip do filtrowania w bibliotece publicznej.
+7. Ekran tworzenia/edycji fiszki z walidacją długości tekstu i licznikiem pozostałych znaków.
+8. Wykresy słupkowe i kołowe dla cotygodniowych statystyk.
+9. LazyColumn z wirtualizacją dla list fiszek, kategorii i wyników wyszukiwania.
+10. Animacje do podkreślenia interakcji użytkownika, szczególnie przy przejściach pytanie-odpowiedź.
+11. Ekran podsumowania sesji nauki z liczbą przejrzanych fiszek i statystykami odpowiedzi.
+12. Scaffold z TopAppBar dla każdego ekranu z odpowiednimi akcjami kontekstowymi.
+13. Komponenty ExpansionPanel dla przedstawienia szczegółowych informacji o fiszkach.
+14. Przechowywanie stanu aplikacji i synchronizacja z bazą przy użyciu wzorca Repository i klasy ViewModel.
+15. Ekran potwierdzenia dla krytycznych operacji, takich jak usuwanie fiszek lub kategorii.
+</matched_recommendations>
+
+<ui_architecture_planning_summary>
+## Architektura UI dla aplikacji FlashyFishki
+
+### Główne założenia
+Aplikacja FlashyFishki to narzędzie edukacyjne wykorzystujące fiszki i algorytm powtórek 3-5-7 do efektywnej nauki. Interfejs użytkownika został zaprojektowany w oparciu o Jetpack Compose, wykorzystując Material 3 Design dla spójnego i nowoczesnego wyglądu.
+
+### Struktura nawigacji
+Aplikacja podzielona jest na dwa główne grafy nawigacyjne:
+1. **Graf autentykacji** - zawierający ekrany logowania i rejestracji
+2. **Graf główny** - zawierający 5 głównych sekcji dostępnych po zalogowaniu:
+   - Profil użytkownika
+   - Moje Fiszki
+   - Nauka
+   - Biblioteka Publiczna
+   - Raporty
+
+Nawigacja między głównymi sekcjami realizowana jest przez Bottom Navigation Bar, zapewniając łatwy dostęp do kluczowych funkcji aplikacji.
+
+### Kluczowe widoki i ekrany
+
+#### Autentykacja
+- **Ekran logowania** - startowy widok aplikacji
+- **Ekran rejestracji** - formularz z walidacją adresu e-mail i siły hasła
+
+#### Profil użytkownika
+- Informacje o użytkowniku (e-mail, data ostatniego logowania)
+- Wskaźnik wykorzystania limitu 1000 fiszek
+- Opcja wylogowania
+- Dostęp do pozostałych sekcji aplikacji
+
+#### Moje Fiszki
+- **Lista kategorii** - wyświetla dostępne kategorie fiszek
+- **Lista fiszek w kategorii** - po wyborze kategorii, fiszki posortowane wg daty utworzenia
+- **Szczegóły fiszki** - pełny widok fiszki z opcją przywrócenia do nauki dla nauczonych fiszek
+- **Tworzenie/Edycja fiszki** - jednolity interfejs z walidacją długości tekstu (500 znaków dla pytania, 1000 dla odpowiedzi)
+- **Eksport fiszek** - możliwość eksportowania wszystkich fiszek z danej kategorii do formatu .md
+
+#### Nauka
+- **Wybór kategorii** - filtrowanie fiszek do nauki
+- **Ekran nauki** - przewijalne karty z animacją obrotu między pytaniem a odpowiedzią
+- **Ocena odpowiedzi** - przyciski "Dobrze"/"Źle" do samooceny
+- **Podsumowanie sesji** - statystyki przerobionych fiszek oraz poprawnych i błędnych odpowiedzi
+
+#### Biblioteka Publiczna
+- **Lista publicznych fiszek** - z możliwością filtrowania po dziedzinie i trudności
+- **Sortowanie** - po dacie utworzenia fiszki
+- **Kopiowanie fiszek** - możliwość dodania fiszki do własnej kolekcji bez zmiany widoku
+
+#### Raporty
+- **Statystyki tygodniowe** - wykresy słupkowe i kołowe dla danych z ostatnich 7 dni
+- **Podział na kategorie** - możliwość przełączania między różnymi kategoriami
+
+### Integracja z bazą danych
+- Wzorzec Repository zapewnia warstwę abstrakcji między UI a bazą danych Room
+- ViewModels zarządzają stanem aplikacji i komunikacją z repozytoriami
+- Flow z Kotlin Coroutines umożliwia reaktywne aktualizacje UI na podstawie zmian w bazie
+
+### Obsługa algorytmu nauki
+- Statusy fiszek (0-3) oznaczone kolorami dla łatwej identyfikacji etapu nauki
+- Automatyczne aktualizowanie nextReviewDate przy zmianie learningStatus
+- Filtry fiszek do nauki na podstawie learningStatus i nextReviewDate
+
+### Responsywność i wydajność
+- LazyColumn zapewnia efektywne wyświetlanie długich list fiszek i kategorii
+- Dynamiczne aktualizacje widoków przy filtrowaniu dla lepszej wydajności
+- Efektywne zarządzanie zasobami dzięki wirtualizacji komponentów listy
+
+### Dostępność
+- Jasne oznaczenia statusów nauki za pomocą kolorów
+- Informacyjne komunikaty w przypadku błędów
+- Czytelne formatowanie tekstów i odpowiednie kontrasty
+
+### Bezpieczeństwo
+- Wydzielony graf nawigacji dla autentykacji
+- Walidacja wprowadzanych danych
+- Potwierdzenia przed operacjami krytycznymi (usuwanie)
+
+### Strategie obsługi błędów
+- Wyświetlanie komunikatów o błędach
+- Automatyczny powrót do poprzedniego widoku po wystąpieniu błędu
+- Zabezpieczenia przed niepoprawnymi danymi wejściowymi
+</ui_architecture_planning_summary>
+
+<unresolved_issues>
+1. Dokładny sposób implementacji animacji przejścia między pytaniem a odpowiedzią w ekranie nauki.
+2. Szczegóły implementacji mechanizmu eksportu fiszek do formatu .md.
+3. Strategia buforowania danych dla trybu offline i synchronizacja po ponownym połączeniu.
+4. Dokładna struktura i layout dla ekranu podsumowania sesji nauki.
+5. Strategia przechowywania i odzyskiwania stanu aplikacji po jej zamknięciu.
+6. Szczegółowy sposób prezentacji danych statystycznych w wykresach.
+7. Strategia optymalizacji wydajności dla użytkowników z dużą liczbą fiszek zbliżającą się do limitu 1000.
+</unresolved_issues>
+</conversation_summary>
+</session_notes>
+
+Twoim zadaniem jest stworzenie szczegółowej architektury interfejsu użytkownika, która obejmuje niezbędne widoki, mapowanie podróży użytkownika, strukturę nawigacji i kluczowe elementy dla każdego widoku. Projekt powinien uwzględniać doświadczenie użytkownika, dostępność i bezpieczeństwo.
+
+Wykonaj następujące kroki, aby ukończyć zadanie:
+
+1. Dokładnie przeanalizuj PRD, schemat bazy i notatki z sesji.
+2. Wyodrębnij i wypisz kluczowe wymagania z PRD.
+3. Zidentyfikuj i wymień główne metody DAO i ich cele.
+4. Utworzenie listy wszystkich niezbędnych widoków na podstawie PRD, schematu bazy i klas DAO oraz notatek z sesji.
+5. Określenie głównego celu i kluczowych informacji dla każdego widoku.
+6. Zaplanuj podróż użytkownika między widokami, w tym podział krok po kroku dla głównego przypadku użycia.
+7. Zaprojektuj strukturę nawigacji.
+8. Zaproponuj kluczowe elementy interfejsu użytkownika dla każdego widoku, biorąc pod uwagę UX, dostępność i bezpieczeństwo.
+9. Rozważ potencjalne przypadki brzegowe lub stany błędów.
+10. Upewnij się, że architektura interfejsu użytkownika jest zgodna ze schemat bazy i klasami DAO.
+11. Przejrzenie i zmapowanie wszystkich historyjek użytkownika z PRD do architektury interfejsu użytkownika.
+12. Wyraźne mapowanie wymagań na elementy interfejsu użytkownika.
+13. Rozważ potencjalne punkty bólu użytkownika i sposób, w jaki interfejs użytkownika je rozwiązuje.
+
+Dla każdego głównego kroku pracuj wewnątrz tagów <ui_architecture_planning> w bloku myślenia, aby rozbić proces myślowy przed przejściem do następnego kroku. Ta sekcja może być dość długa. To w porządku, że ta sekcja może być dość długa.
+
+Przedstaw ostateczną architekturę interfejsu użytkownika w następującym formacie Markdown:
+
+```markdown
+# Architektura UI dla [Nazwa produktu]
+
+## 1. Przegląd struktury UI
+
+[Przedstaw ogólny przegląd struktury UI]
+
+## 2. Lista widoków
+
+[Dla każdego widoku podaj:
+- Nazwa widoku
+- Ścieżka widoku
+- Główny cel
+- Kluczowe informacje do wyświetlenia
+- Kluczowe komponenty widoku
+- UX, dostępność i względy bezpieczeństwa]
+
+## 3. Mapa podróży użytkownika
+
+[Opisz przepływ między widokami i kluczowymi interakcjami użytkownika]
+
+## 4. Układ i struktura nawigacji
+
+[Wyjaśnij, w jaki sposób użytkownicy będą poruszać się między widokami]
+
+## 5. Kluczowe komponenty
+
+[Wymień i krótko opisz kluczowe komponenty, które będą używane w wielu widokach].
+```
+
+Skup się wyłącznie na architekturze interfejsu użytkownika, podróży użytkownika, nawigacji i kluczowych elementach dla każdego widoku. Nie uwzględniaj szczegółów implementacji, konkretnego projektu wizualnego ani przykładów kodu, chyba że są one kluczowe dla zrozumienia architektury.
+
+Końcowy rezultat powinien składać się wyłącznie z architektury UI w formacie Markdown w języku polskim, którą zapiszesz w pliku .ai/ui-plan.md. Nie powielaj ani nie powtarzaj żadnej pracy wykonanej w bloku myślenia.
