@@ -66,6 +66,9 @@ fun FlashyFishkiNavigation(
                 },
                 onNavigateToNewFlashcard = {
                     navController.navigate("flashcard_new")
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }
