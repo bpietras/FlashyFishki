@@ -32,26 +32,31 @@ object DatabaseModule {
     }
     
     @Provides
+    @Singleton
     fun provideUserDao(database: FlashyFishkiDatabase): UserDao {
         return database.userDao()
     }
     
     @Provides
+    @Singleton
     fun provideCategoryDao(database: FlashyFishkiDatabase): CategoryDao {
         return database.categoryDao()
     }
     
     @Provides
+    @Singleton
     fun provideFlashcardDao(database: FlashyFishkiDatabase): FlashcardDao {
         return database.flashcardDao()
     }
     
     @Provides
+    @Singleton
     fun provideLearningStatisticsDao(database: FlashyFishkiDatabase): LearningStatisticsDao {
         return database.learningStatisticsDao()
     }
     
     @Provides
+    @Singleton
     fun provideReportDao(database: FlashyFishkiDatabase): ReportDao {
         return database.reportDao()
     }

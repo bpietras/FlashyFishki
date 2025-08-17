@@ -20,7 +20,8 @@ import com.an.intelligence.flashyfishki.domain.model.User
 @Composable
 fun HomeScreen(
     currentUser: User?,
-    onNavigateToAuth: () -> Unit
+    onNavigateToAuth: () -> Unit,
+    onNavigateToCategories: () -> Unit = {}
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
     
@@ -53,7 +54,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* Navigate to categories list */ }
+                onClick = onNavigateToCategories
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Manage Flashcards")
             }
@@ -83,7 +84,7 @@ fun HomeScreen(
             }
             
             item {
-                EmptyCategoriesMessage()
+                EmptyCategoriesMessage(onNavigateToCategories)
             }
         }
     }
@@ -158,7 +159,9 @@ private fun QuickStatsCard() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                IconButton(onClick = { /* Navigate to statistics */ }) {
+                IconButton(onClick = { 
+                    // TODO: Navigate to statistics when implemented
+                }) {
                     Icon(Icons.Default.Assessment, contentDescription = "View Statistics")
                 }
             }
@@ -210,7 +213,9 @@ private fun StatItem(
 }
 
 @Composable
-private fun EmptyCategoriesMessage() {
+private fun EmptyCategoriesMessage(
+    onNavigateToCategories: () -> Unit = {}
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -235,7 +240,7 @@ private fun EmptyCategoriesMessage() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { /* Navigate to categories list */ }
+                onClick = onNavigateToCategories
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))

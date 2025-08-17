@@ -44,6 +44,9 @@ fun FlashyFishkiNavigation(
                     navController.navigate(AuthRoute) {
                         popUpTo(HomeRoute) { inclusive = true }
                     }
+                },
+                onNavigateToCategories = {
+                    navController.navigate("categories")
                 }
             )
         }
