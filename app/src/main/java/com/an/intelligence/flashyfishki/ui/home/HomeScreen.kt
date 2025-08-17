@@ -14,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.an.intelligence.flashyfishki.domain.dao.CategoryDao
 import com.an.intelligence.flashyfishki.domain.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,9 +24,20 @@ import com.an.intelligence.flashyfishki.domain.model.User
 fun HomeScreen(
     currentUser: User?,
     onNavigateToAuth: () -> Unit,
-    onNavigateToCategories: () -> Unit = {}
+    onNavigateToCategories: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
+    
+    val categoriesWithStats by viewModel.categoriesWithStats.collectAsStateWithLifecycle()
+    val homeStats by viewModel.homeStats.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val error by viewModel.error.collectAsStateWithLifecycle()
+
+    // Load data on screen start
+    LaunchedEffect(Unit) {
+        viewModel.loadHomeData()
+    }
     
     Scaffold(
         topBar = {
@@ -72,7 +86,7 @@ fun HomeScreen(
             }
             
             item {
-                QuickStatsCard()
+                QuickStatsCard(homeStats)
             }
             
             item {
@@ -83,8 +97,49 @@ fun HomeScreen(
                 )
             }
             
-            item {
-                EmptyCategoriesMessage(onNavigateToCategories)
+            // Show loading or error states
+            if (isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+
+            error?.let { errorMessage ->
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        )
+                    ) {
+                        Text(
+                            text = errorMessage,
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                }
+            }
+
+            // Show categories or empty state
+            if (!isLoading && error == null) {
+                if (categoriesWithStats.isEmpty()) {
+                    item {
+                        EmptyCategoriesMessage(onNavigateToCategories)
+                    }
+                } else {
+                    item {
+                        CategoriesPreviewCard(
+                            categories = categoriesWithStats.take(3),
+                            onSeeAllCategories = onNavigateToCategories
+                        )
+                    }
+                }
             }
         }
     }
@@ -141,7 +196,9 @@ private fun WelcomeCard() {
 }
 
 @Composable
-private fun QuickStatsCard() {
+private fun QuickStatsCard(
+    homeStats: HomeStats
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -174,15 +231,15 @@ private fun QuickStatsCard() {
             ) {
                 StatItem(
                     label = "Categories",
-                    value = "0"
+                    value = homeStats.categoriesCount.toString()
                 )
                 StatItem(
                     label = "Cards Studied",
-                    value = "0"
+                    value = homeStats.cardsStudied.toString()
                 )
                 StatItem(
                     label = "Success Rate",
-                    value = "0%"
+                    value = "${homeStats.successRate.toInt()}%"
                 )
             }
         }
@@ -209,6 +266,58 @@ private fun StatItem(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@Composable
+private fun CategoriesPreviewCard(
+    categories: List<CategoryDao.CategoryWithLearningStats>,
+    onSeeAllCategories: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Recent Categories",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                TextButton(onClick = onSeeAllCategories) {
+                    Text("See All")
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            categories.forEach { category ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = category.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "${category.flashcardCount} cards",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 
