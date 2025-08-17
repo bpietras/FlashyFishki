@@ -171,52 +171,5 @@ interface FlashcardDao {
         }
     }
     
-    // Methods for weekly reports
-    @Query("""
-        SELECT 
-            f.category_id as categoryId,
-            c.name as categoryName,
-            COUNT(f.id) as flashcardCount,
-            SUM(CASE WHEN f.learning_status = 3 THEN 1 ELSE 0 END) as learnedCount,
-            SUM(ls.correct_answers_count) as correctAnswersCount,
-            SUM(ls.incorrect_answers_count) as incorrectAnswersCount
-        FROM flashcards f
-        JOIN categories c ON f.category_id = c.id
-        LEFT JOIN learning_statistics ls ON f.id = ls.flashcard_id
-        WHERE f.user_id = :userId
-        GROUP BY f.category_id
-        ORDER BY c.name ASC
-    """)
-    suspend fun getUserLearningStatisticsByCategory(userId: Long): List<CategoryLearningStatistics>
-    
-    @Query("""
-        SELECT
-            COUNT(f.id) as reviewedCount,
-            SUM(ls.correct_answers_count) as correctCount,
-            SUM(ls.incorrect_answers_count) as incorrectCount
-        FROM flashcards f
-        JOIN learning_statistics ls ON f.id = ls.flashcard_id
-        WHERE f.user_id = :userId
-        AND ls.last_updated BETWEEN :startDate AND :endDate
-    """)
-    suspend fun getWeeklyLearningStatistics(
-        userId: Long, 
-        startDate: Date, 
-        endDate: Date
-    ): WeeklyLearningStatistics
-    
-    data class CategoryLearningStatistics(
-        val categoryId: Long,
-        val categoryName: String,
-        val flashcardCount: Int,
-        val learnedCount: Int,
-        val correctAnswersCount: Int,
-        val incorrectAnswersCount: Int
-    )
-    
-    data class WeeklyLearningStatistics(
-        val reviewedCount: Int,
-        val correctCount: Int,
-        val incorrectCount: Int
-    )
+    // Usunięto metody raportowe, przeniesione do ReportDao
 }

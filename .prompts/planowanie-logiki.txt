@@ -75,3 +75,166 @@ Generowanie cotygodniowych raportów statystycznych
 Analizy postępów w nauce z podziałem na kategorie
 Wszystkie DAO zostały zaprojektowane z myślą o wymaganiach określonych w PRD, takich jak algorytm powtórek 3-5-7, biblioteka publiczna fiszek, zarządzanie kategoriami i raportowanie.
 Klasa bazy danych FlashyFishkiDatabase została zaktualizowana, aby udostępniać wszystkie te DAO dla pozostałych komponentów aplikacji.
+
+
+_____________________________________________________________________________________________________________________________
+
+Niektóre funkcjonalności są zduplikowane w klasach LearningStatisticsDao i UserDao - zidentyfikuj które i zaproponuj w której klasie powinny się znajdować aby najlepiej wspierać zaplanowane funkcjonalności
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Przeanalizuję obie klasy DAO, aby zidentyfikować zduplikowane funkcjonalności:
+Ran tool
+Ran tool
+<no message>
+Ran tool
+Po analizie obu klas DAO, zidentyfikowałem następujące zduplikowane funkcjonalności:
+
+## Zduplikowane funkcjonalności:
+
+1. **Zliczanie odpowiedzi użytkownika**:
+   - W `UserDao`: `incrementCorrectAnswers()` i `incrementIncorrectAnswers()` (linie 40-44)
+   - W `LearningStatisticsDao`: `incrementCorrectAnswers()` i `incrementIncorrectAnswers()` (linie 46-60)
+
+2. **Statystyki tygodniowe**:
+   - W `UserDao`: `getWeeklyStatistics()` (linie 62-73)
+   - W `LearningStatisticsDao`: `getWeeklyReviewSummary()` i `getWeeklyStatisticsByCategory()` (linie 84-118)
+   - W `FlashcardDao`: `getWeeklyLearningStatistics()` (linie 192-206)
+
+3. **Zliczanie fiszek użytkownika**:
+   - W `UserDao`: `countUserFlashcards()` (linia 46)
+   - W `FlashcardDao`: `countUserFlashcards()` (linia 110)
+
+## Proponowane rozwiązanie:
+
+### 1. UserDao powinien zawierać:
+- Podstawowe operacje na użytkownikach (CRUD)
+- Aktualizacje ogólnych statystyk użytkownika (np. last_login_date)
+- Metoda `getUserStatistics()` - widok całościowy profilu użytkownika
+
+### 2. FlashcardDao powinien zawierać:
+- Operacje CRUD na fiszkach
+- Operacje wyszukiwania fiszek według różnych kryteriów
+- Operacje związane z kopiowaniem publicznych fiszek
+- `countUserFlashcards()` - przenieść tutaj tę funkcjonalność z UserDao
+- `countLearnedFlashcards()` - zostaje tutaj
+
+### 3. LearningStatisticsDao powinien zawierać:
+- Operacje CRUD na statystykach nauki
+- Rejestrowanie odpowiedzi (`recordAnswer()`)
+- `incrementCorrectAnswers()` i `incrementIncorrectAnswers()` - powinny pozostać tutaj, a zostać usunięte z UserDao
+- Wszystkie metody raportowe związane ze statystykami nauki, w tym:
+  - `getWeeklyReviewSummary()`
+  - `getWeeklyStatisticsByCategory()`
+
+### 4. Dodać nową klasę ReportDao:
+- Przesunąć wszystkie funkcjonalności raportowe z różnych DAOs do osobnej klasy ReportDao:
+  - `getWeeklyLearningStatistics()` z FlashcardDao
+  - `getUserLearningStatisticsByCategory()` z FlashcardDao
+  - `getWeeklyStatistics()` z UserDao
+  - Opcjonalnie również dodatkowe zaawansowane funkcje raportujące
+
+## Proponowane zmiany:
+
+1. Usunąć `incrementCorrectAnswers()` i `incrementIncorrectAnswers()` z UserDao
+2. Usunąć `countUserFlashcards()` z UserDao
+3. Zmodyfikować `recordAnswer()` w LearningStatisticsDao, aby aktualizował także statystyki użytkownika w tabeli User:
+
+```kotlin
+@Transaction
+suspend fun recordAnswer(flashcardId: Long, userId: Long, isCorrect: Boolean) {
+    val currentTime = Date()
+    var statistics = getStatisticsByFlashcardId(flashcardId)
+
+    if (statistics == null) {
+        statistics = LearningStatistics(
+            flashcardId = flashcardId,
+            correctAnswersCount = 0,
+            incorrectAnswersCount = 0,
+            lastUpdated = currentTime
+        )
+        insertStatistics(statistics)
+    }
+
+    // Aktualizacja statystyk fiszki
+    if (isCorrect) {
+        incrementCorrectAnswers(flashcardId, currentTime)
+    } else {
+        incrementIncorrectAnswers(flashcardId, currentTime)
+    }
+
+    // Aktualizacja statystyk użytkownika w tabeli User
+    if (isCorrect) {
+        userDao.incrementCorrectAnswers(userId)
+    } else {
+        userDao.incrementIncorrectAnswers(userId)
+    }
+    userDao.incrementTotalCardsReviewed(userId)
+}
+```
+
+4. Utworzyć nową klasę ReportDao dla spójnego interfejsu do wszystkich raportów i statystyk:
+
+```kotlin
+@Dao
+interface ReportDao {
+    // Raportowanie tygodniowe
+    suspend fun getWeeklyStatistics(userId: Long, startDate: Date, endDate: Date): WeeklyStats
+
+    // Statystyki dla poszczególnych kategorii
+    suspend fun getUserLearningStatisticsByCategory(userId: Long): List<CategoryLearningStatistics>
+
+    // Pozostałe metody raportowe
+}
+```
+
+Takie podejście zapewni lepszą organizację kodu, zmniejszy duplikację i ułatwi rozwijanie funkcjonalności raportowych w przyszłości.
+
+______________________________________________________________________________________________________________
+
+Wprowadź proponowane zmiany do plików
+
+Wprowadzam proponowane zmiany do plików:
+
+1. Najpierw utworzę nową klasę ReportDao:
+Ran tool
+2. Teraz zaktualizuję UserDao, aby usunąć zduplikowane funkcjonalności:
+Ran tool
+3. Teraz zaktualizuję FlashcardDao, aby usunąć zduplikowane funkcjonalności:
+Ran tool
+4. Teraz zaktualizuję LearningStatisticsDao, aby zmodyfikować metodę recordAnswer:
+Ran tool
+5. Zaktualizujmy też metodę getWeeklyReviewSummary w LearningStatisticsDao, aby przenieść ją do ReportDao:
+Ran tool
+6. Na koniec zaktualizuję klasę FlashyFishkiDatabase, aby zawierała referencję do nowej klasy ReportDao:
+Ran tool
+Sprawdźmy teraz, czy nie ma żadnych błędów lintowania w zmodyfikowanych plikach:
+Ran tool
+Wprowadzone zmiany usunęły zduplikowane funkcjonalności i zoptymalizowały strukturę kodu. Oto podsumowanie zmian:
+
+1. **Utworzono nową klasę ReportDao** - skonsolidowano w niej wszystkie funkcjonalności raportowe, które wcześniej były rozproszone między różnymi DAO. Zawiera ona:
+   - Metody do generowania tygodniowych statystyk
+   - Metody do analizy statystyk użytkownika z podziałem na kategorie
+   - Metody do podsumowania profilu użytkownika
+
+2. **Zmodyfikowano UserDao** - usunięto zduplikowane funkcjonalności:
+   - Usunięto metody raportowe przeniesione do ReportDao
+   - Zachowano podstawowe operacje na użytkownikach oraz aktualizacje statystyk
+
+3. **Zmodyfikowano FlashcardDao** - usunięto zduplikowane funkcjonalności:
+   - Usunięto metody raportowe przeniesione do ReportDao
+   - Zachowano operacje związane z zarządzaniem fiszkami
+
+4. **Zmodyfikowano LearningStatisticsDao** - zoptymalizowano logikę rejestrowania odpowiedzi:
+   - Rozszerzono metodę `recordAnswer()` o aktualizację statystyk użytkownika
+   - Usunięto metody raportowe przeniesione do ReportDao
+
+5. **Zaktualizowano FlashyFishkiDatabase** - dodano dostęp do nowego DAO:
+   - Dodano abstrakcyjną metodę `reportDao()` udostępniającą ReportDao
+
+Dzięki tym zmianom, kod jest bardziej zorganizowany, uniknięto duplikacji, a logika biznesowa jest wyraźnie przypisana do odpowiednich DAO. Każde DAO ma teraz jasno określony zakres odpowiedzialności:
+- UserDao: operacje na użytkownikach
+- FlashcardDao: operacje na fiszkach
+- CategoryDao: operacje na kategoriach
+- LearningStatisticsDao: rejestrowanie i aktualizacja statystyk nauki
+- ReportDao: generowanie raportów i statystyk

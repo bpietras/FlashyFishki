@@ -59,8 +59,16 @@ interface LearningStatisticsDao {
     """)
     suspend fun incrementIncorrectAnswers(flashcardId: Long, updateTime: Date)
     
+    /**
+     * Rejestruje odpowiedź na fiszkę i aktualizuje statystyki
+     * 
+     * @param flashcardId ID fiszki
+     * @param userId ID użytkownika
+     * @param isCorrect czy odpowiedź była poprawna
+     * @param userDao referencja do UserDao potrzebna do aktualizacji statystyk użytkownika
+     */
     @Transaction
-    suspend fun recordAnswer(flashcardId: Long, isCorrect: Boolean) {
+    suspend fun recordAnswer(flashcardId: Long, userId: Long, isCorrect: Boolean, userDao: UserDao) {
         val currentTime = Date()
         var statistics = getStatisticsByFlashcardId(flashcardId)
         
@@ -74,59 +82,21 @@ interface LearningStatisticsDao {
             insertStatistics(statistics)
         }
         
+        // Aktualizacja statystyk fiszki
         if (isCorrect) {
             incrementCorrectAnswers(flashcardId, currentTime)
         } else {
             incrementIncorrectAnswers(flashcardId, currentTime)
         }
+        
+        // Aktualizacja statystyk użytkownika w tabeli User
+        if (isCorrect) {
+            userDao.incrementCorrectAnswers(userId)
+        } else {
+            userDao.incrementIncorrectAnswers(userId)
+        }
+        userDao.incrementTotalCardsReviewed(userId)
     }
     
-    @Query("""
-        SELECT 
-            SUM(ls.correct_answers_count) as totalCorrect,
-            SUM(ls.incorrect_answers_count) as totalIncorrect,
-            COUNT(DISTINCT f.id) as uniqueFlashcardsReviewed
-        FROM learning_statistics ls
-        JOIN flashcards f ON ls.flashcard_id = f.id
-        WHERE f.user_id = :userId
-        AND ls.last_updated BETWEEN :startDate AND :endDate
-    """)
-    suspend fun getWeeklyReviewSummary(
-        userId: Long, 
-        startDate: Date, 
-        endDate: Date
-    ): WeeklyReviewSummary
-    
-    @Query("""
-        SELECT 
-            c.id as categoryId,
-            c.name as categoryName,
-            SUM(ls.correct_answers_count) as correctCount,
-            SUM(ls.incorrect_answers_count) as incorrectCount
-        FROM learning_statistics ls
-        JOIN flashcards f ON ls.flashcard_id = f.id
-        JOIN categories c ON f.category_id = c.id
-        WHERE f.user_id = :userId
-        AND ls.last_updated BETWEEN :startDate AND :endDate
-        GROUP BY c.id
-        ORDER BY c.name
-    """)
-    suspend fun getWeeklyStatisticsByCategory(
-        userId: Long, 
-        startDate: Date, 
-        endDate: Date
-    ): List<CategoryWeeklySummary>
-    
-    data class WeeklyReviewSummary(
-        val totalCorrect: Int,
-        val totalIncorrect: Int,
-        val uniqueFlashcardsReviewed: Int
-    )
-    
-    data class CategoryWeeklySummary(
-        val categoryId: Long,
-        val categoryName: String,
-        val correctCount: Int,
-        val incorrectCount: Int
-    )
+    // Metody raportowe przeniesione do ReportDao
 }

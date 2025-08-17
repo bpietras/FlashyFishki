@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import com.an.intelligence.flashyfishki.domain.dao.CategoryDao
 import com.an.intelligence.flashyfishki.domain.dao.FlashcardDao
 import com.an.intelligence.flashyfishki.domain.dao.LearningStatisticsDao
+import com.an.intelligence.flashyfishki.domain.dao.ReportDao
 import com.an.intelligence.flashyfishki.domain.dao.UserDao
 
 @Database(
@@ -24,6 +25,7 @@ abstract class FlashyFishkiDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun flashcardDao(): FlashcardDao
     abstract fun learningStatisticsDao(): LearningStatisticsDao
+    abstract fun reportDao(): ReportDao
 
     companion object {
         const val DATABASE_NAME = "flash_fishki_database.db"
