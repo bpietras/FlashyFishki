@@ -3,26 +3,21 @@ package com.an.intelligence.flashyfishki.domain.repository
 import com.an.intelligence.flashyfishki.domain.dao.UserDao
 import com.an.intelligence.flashyfishki.domain.model.User
 import com.an.intelligence.flashyfishki.utils.PasswordUtils
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockedStatic
-import org.mockito.Mockito.*
-import org.mockito.MockitoAnnotations
 import java.util.*
 
 class AuthRepositoryTest {
 
-    @Mock
     private lateinit var userDao: UserDao
-
     private lateinit var authRepository: AuthRepository
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        userDao = mockk()
         authRepository = AuthRepository(userDao)
     }
 
@@ -33,20 +28,18 @@ class AuthRepositoryTest {
         val password = "password123"
         val hashedPassword = "hashed_password"
         
-        `when`(userDao.getUserByEmail(email)).thenReturn(null)
+        coEvery { userDao.getUserByEmail(email) } returns null
         
-        mockStatic(PasswordUtils::class.java).use { mockedPasswordUtils ->
-            mockedPasswordUtils.`when`<String> { PasswordUtils.hashPassword(password) }
-                .thenReturn(hashedPassword)
-            
-            `when`(userDao.insertUser(any(User::class.java))).thenReturn(1L)
+        mockkObject(PasswordUtils) {
+            every { PasswordUtils.hashPassword(password) } returns hashedPassword
+            coEvery { userDao.insertUser(any()) } returns 1L
 
             // When
             val result = authRepository.registerUser(email, password)
 
             // Then
             assertTrue(result is AuthResult.Success)
-            verify(userDao).insertUser(any(User::class.java))
+            coVerify { userDao.insertUser(any()) }
         }
     }
 
@@ -62,7 +55,7 @@ class AuthRepositoryTest {
             createdAt = Date()
         )
         
-        `when`(userDao.getUserByEmail(email)).thenReturn(existingUser)
+        coEvery { userDao.getUserByEmail(email) } returns existingUser
 
         // When
         val result = authRepository.registerUser(email, password)
@@ -70,7 +63,7 @@ class AuthRepositoryTest {
         // Then
         assertTrue(result is AuthResult.Error)
         assertEquals("User with this email already exists", (result as AuthResult.Error).message)
-        verify(userDao, never()).insertUser(any(User::class.java))
+        coVerify(exactly = 0) { userDao.insertUser(any()) }
     }
 
     @Test
@@ -85,7 +78,7 @@ class AuthRepositoryTest {
         // Then
         assertTrue(result is AuthResult.Error)
         assertEquals("Please enter a valid email address", (result as AuthResult.Error).message)
-        verify(userDao, never()).insertUser(any(User::class.java))
+        coVerify(exactly = 0) { userDao.insertUser(any()) }
     }
 
     @Test
@@ -100,7 +93,7 @@ class AuthRepositoryTest {
         // Then
         assertTrue(result is AuthResult.Error)
         assertTrue((result as AuthResult.Error).message.contains("Password must be at least 8 characters"))
-        verify(userDao, never()).insertUser(any(User::class.java))
+        coVerify(exactly = 0) { userDao.insertUser(any()) }
     }
 
     @Test
@@ -115,13 +108,12 @@ class AuthRepositoryTest {
             createdAt = Date()
         )
         
-        `when`(userDao.getUserByEmail(email)).thenReturn(user)
-        `when`(userDao.getUserById(1L)).thenReturn(user)
+        coEvery { userDao.getUserByEmail(email) } returns user
+        coEvery { userDao.getUserById(1L) } returns user
+        coEvery { userDao.updateLastLoginDate(1L, any()) } just Runs
         
-        mockStatic(PasswordUtils::class.java).use { mockedPasswordUtils ->
-            mockedPasswordUtils.`when`<Boolean> { 
-                PasswordUtils.verifyPassword(password, user.passwordHash) 
-            }.thenReturn(true)
+        mockkObject(PasswordUtils) {
+            every { PasswordUtils.verifyPassword(password, user.passwordHash) } returns true
 
             // When
             val result = authRepository.loginUser(email, password)
@@ -129,7 +121,7 @@ class AuthRepositoryTest {
             // Then
             assertTrue(result is LoginResult.Success)
             assertEquals(user, (result as LoginResult.Success).user)
-            verify(userDao).updateLastLoginDate(eq(1L), any(Date::class.java))
+            coVerify { userDao.updateLastLoginDate(eq(1L), any()) }
         }
     }
 
@@ -139,7 +131,7 @@ class AuthRepositoryTest {
         val email = "test@example.com"
         val password = "password123"
         
-        `when`(userDao.getUserByEmail(email)).thenReturn(null)
+        coEvery { userDao.getUserByEmail(email) } returns null
 
         // When
         val result = authRepository.loginUser(email, password)
@@ -161,12 +153,10 @@ class AuthRepositoryTest {
             createdAt = Date()
         )
         
-        `when`(userDao.getUserByEmail(email)).thenReturn(user)
+        coEvery { userDao.getUserByEmail(email) } returns user
         
-        mockStatic(PasswordUtils::class.java).use { mockedPasswordUtils ->
-            mockedPasswordUtils.`when`<Boolean> { 
-                PasswordUtils.verifyPassword(password, user.passwordHash) 
-            }.thenReturn(false)
+        mockkObject(PasswordUtils) {
+            every { PasswordUtils.verifyPassword(password, user.passwordHash) } returns false
 
             // When
             val result = authRepository.loginUser(email, password)

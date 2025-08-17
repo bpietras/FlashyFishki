@@ -10,6 +10,7 @@ import com.an.intelligence.flashyfishki.ui.flashcards.model.ExportProgress
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -69,7 +70,7 @@ class ExportViewModelTest {
         authRepository = mockk()
         
         // Mock auth repository
-        every { authRepository.currentUser } returns flowOf(testUser)
+        every { authRepository.currentUser } returns MutableStateFlow(testUser)
         
         viewModel = ExportViewModel(flashcardDao, categoryDao, authRepository)
     }
@@ -113,7 +114,7 @@ class ExportViewModelTest {
     @Test
     fun `loadExportData should handle unauthenticated user`() = runTest {
         // Given
-        every { authRepository.currentUser } returns flowOf(null)
+        every { authRepository.currentUser } returns MutableStateFlow(null)
         
         // When
         viewModel.loadExportData(testCategory.categoryId)

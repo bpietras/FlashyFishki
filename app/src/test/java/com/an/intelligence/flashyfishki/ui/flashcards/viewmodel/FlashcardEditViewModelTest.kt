@@ -10,6 +10,7 @@ import com.an.intelligence.flashyfishki.ui.flashcards.model.FlashcardFormState
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -59,7 +60,7 @@ class FlashcardEditViewModelTest {
         authRepository = mockk()
         
         // Mock auth repository
-        every { authRepository.currentUser } returns flowOf(testUser)
+        every { authRepository.currentUser } returns MutableStateFlow(testUser)
         
         // Mock category DAO
         every { categoryDao.getAllCategories() } returns flowOf(listOf(testCategory))
