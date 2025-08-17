@@ -290,3 +290,27 @@ W trakcie całego procesu implementacji należy ściśle przestrzegać dostarczo
 
 Upewnij się, że twoja implementacja dokładnie odzwierciedla dostarczony plan implementacji i przestrzega wszystkich określonych zasad. Zwróć szczególną uwagę na strukturę komponentów, integrację API i obsługę interakcji użytkownika.
 
+_______________________________________________________________________________________________________________________________
+
+zanim przejdziesz do kolejnych kroków zwróć uwagę na błędy kompilacji jakie pojawiły się podczas budowania aplikacji i napraw je:
+
+> Task :app:compileDebugKotlin FAILED
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/navigation/FlashyFishkiNavigation.kt:63:40 Unresolved reference 'toRoute'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/navigation/FlashyFishkiNavigation.kt:83:40 Unresolved reference 'toRoute'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/navigation/FlashyFishkiNavigation.kt:97:40 Unresolved reference 'toRoute'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/navigation/FlashyFishkiNavigation.kt:112:40 Unresolved reference 'toRoute'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/CategoriesViewModel.kt:31:66 Unresolved reference 'currentUser'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/CategoriesViewModel.kt:32:14 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/CategoriesViewModel.kt:32:20 Unresolved reference 'userId'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/CategoryFlashcardsViewModel.kt:38:66 Unresolved reference 'currentUser'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/CategoryFlashcardsViewModel.kt:39:14 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/CategoryFlashcardsViewModel.kt:39:20 Unresolved reference 'userId'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/ExportViewModel.kt:42:66 Unresolved reference 'currentUser'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/ExportViewModel.kt:43:14 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/ExportViewModel.kt:43:20 Unresolved reference 'userId'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/FlashcardDetailsViewModel.kt:40:66 Unresolved reference 'currentUser'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/FlashcardDetailsViewModel.kt:41:14 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/FlashcardDetailsViewModel.kt:41:20 Unresolved reference 'userId'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/FlashcardEditViewModel.kt:43:66 Unresolved reference 'currentUser'.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/FlashcardEditViewModel.kt:44:14 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/bapr/AndroidStudioProjects/FlashyFishki/app/src/main/java/com/an/intelligence/flashyfishki/ui/flashcards/viewmodel/FlashcardEditViewModel.kt:44:20 Unresolved reference 'userId'.

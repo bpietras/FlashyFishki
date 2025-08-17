@@ -3,6 +3,9 @@ package com.an.intelligence.flashyfishki.domain.repository
 import com.an.intelligence.flashyfishki.domain.dao.UserDao
 import com.an.intelligence.flashyfishki.domain.model.User
 import com.an.intelligence.flashyfishki.utils.PasswordUtils
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +24,10 @@ sealed class LoginResult {
 class AuthRepository @Inject constructor(
     private val userDao: UserDao
 ) {
+    
+    // Current logged in user
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
     
     suspend fun registerUser(email: String, password: String): AuthResult {
         return try {
@@ -71,9 +78,10 @@ class AuthRepository @Inject constructor(
             // Update last login date
             userDao.updateLastLoginDate(user.userId, Date())
             
-            // Return updated user
-            val updatedUser = userDao.getUserById(user.userId)
-            LoginResult.Success(updatedUser ?: user)
+            // Return updated user and set current user
+            val updatedUser = userDao.getUserById(user.userId) ?: user
+            _currentUser.value = updatedUser
+            LoginResult.Success(updatedUser)
             
         } catch (e: Exception) {
             LoginResult.Error("Login failed: ${e.message}")
@@ -81,7 +89,7 @@ class AuthRepository @Inject constructor(
     }
     
     suspend fun logout() {
-        // Session clearing is no longer needed as we don't persist sessions
+        _currentUser.value = null
     }
     
     private fun isValidEmail(email: String): Boolean {

@@ -38,6 +38,8 @@ class FlashcardEditViewModel @Inject constructor(
 
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode: StateFlow<Boolean> = _isEditMode.asStateFlow()
+    
+    private val _currentFlashcardId = MutableStateFlow<Long?>(null)
 
     // Get current user ID from auth repository
     private val currentUserId: StateFlow<Long?> = authRepository.currentUser
@@ -91,6 +93,7 @@ class FlashcardEditViewModel @Inject constructor(
                     return@launch
                 }
 
+                _currentFlashcardId.value = flashcardId
                 _formState.value = FlashcardFormState(
                     question = flashcard.question,
                     answer = flashcard.answer,
@@ -219,17 +222,20 @@ class FlashcardEditViewModel @Inject constructor(
                 
                 if (_isEditMode.value) {
                     // Update existing flashcard
-                    val existingFlashcard = flashcardDao.getFlashcardById(state.categoryId) // This should be flashcardId, but we need to track it
-                    if (existingFlashcard != null) {
-                        val updatedFlashcard = existingFlashcard.copy(
-                            question = state.question.trim(),
-                            answer = state.answer.trim(),
-                            categoryId = state.categoryId,
-                            difficultyLevel = state.difficultyLevel,
-                            isPublic = state.isPublic,
-                            updatedAt = currentDate
-                        )
-                        flashcardDao.updateFlashcard(updatedFlashcard)
+                    val flashcardId = _currentFlashcardId.value
+                    if (flashcardId != null) {
+                        val existingFlashcard = flashcardDao.getFlashcardById(flashcardId)
+                        if (existingFlashcard != null) {
+                            val updatedFlashcard = existingFlashcard.copy(
+                                question = state.question.trim(),
+                                answer = state.answer.trim(),
+                                categoryId = state.categoryId,
+                                difficultyLevel = state.difficultyLevel,
+                                isPublic = state.isPublic,
+                                updatedAt = currentDate
+                            )
+                            flashcardDao.updateFlashcard(updatedFlashcard)
+                        }
                     }
                 } else {
                     // Create new flashcard
