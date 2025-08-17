@@ -1,0 +1,22 @@
+Jesteś starszym programistą Androida i masz za zadanie zaimplementowanie testów integracyjnych wg przygotowanego planu.
+
+<test-plan>
+@.ai/test-plam.md
+<test-plan>
+
+Skup się na testach integracyjnych - ich zakresie i narzędziach. Przejrzyj scenariusze testowe dla kluczowych funkcjonalności i wybierz możliwe do przetestowania w ramach testów integracyjnych.
+
+Implementuj zgodnie z następującym podejściem:
+
+<implementation_approach>
+Realizuj maksymalnie 1 rodzaj integracji między warstwami z poniższych:
+- Room Database + DAOs
+- Repository + DAO integration
+- ViewModel + Repository integration
+- Navigation flow tests
+Podsumuj krótko co zrobiłeś i opisz plan na kolejne działania - zatrzymaj w tym momencie pracę i czekaj na mój feedback.
+</implementation_approach>
+
+W trakcie całego procesu implementacji należy ściśle przestrzegać dostarczonych zasad implementacji. Zasady te mają pierwszeństwo przed wszelkimi ogólnymi najlepszymi praktykami, które mogą być z nimi sprzeczne.
+
+Upewnij się, że twoja implementacja dokładnie odzwierciedla dostarczony plan implementacji i przestrzega wszystkich określonych zasad. Zwróć szczególną uwagę na strukturę komponentów, integrację API i obsługę interakcji użytkownika.
